@@ -198,6 +198,8 @@ class TaskController implements ControllerProviderInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $taskRepository->delete($form->getData());
+
             $app['session']->getFlashBag()->add(
                 'messages',
                 [
