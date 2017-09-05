@@ -1,0 +1,61 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.bookmarks_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>
+                {{ 'title.bookmarks_list'|trans }}
+            </h1>
+        </div>
+    </div>
+    {% include 'default/_paginator.html.twig' with {
+    paginator: paginator,
+    route_name: 'bookmark_index_paginated',
+    } %}
+    {% if paginator.data|length %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{ 'label.thead_title'|trans }}</th>
+                <th class="text-right">{{ 'label.thead_crud'|trans }}</th>
+            </tr>
+            </thead>
+            {% for row in paginator.data %}
+                <tr>
+                    <td>{{ row.title }}</td>
+                    <td>
+                        <div class="btn-group pull-right" role="group">
+                            <a class="btn btn-default" href="{{ url('bookmark_view', {'id': row.id }) }}" title="{{ 'label.view'|trans }}">
+                                <span class="hidden">{{ 'label.view'|trans }}</span>
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                            <a class="btn btn-default" href="{{ url('bookmark_edit', {'id': row.id }) }}" title="{{ 'label.edit'|trans }}">
+                                <span class="hidden">{{ 'label.edit'|trans }}</span>
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                            <a class="btn btn-danger" href="{{ url('bookmark_delete', {'id': row.id }) }}" title="{{ 'label.remove'|trans }}">
+                                <span class="hidden">{{ 'label.remove'|trans }}</span>
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </div>
+
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+            <div>
+                <p>{{ 'message.empty_list'|trans }}</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-sm-1">
+            <a class="btn btn-primary" href="{{ url('bookmark_add') }}">{{ 'label.add_bookmark'|trans }}</a>
+        </div>
+    </div>
+{% endblock %}

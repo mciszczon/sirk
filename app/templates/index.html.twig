@@ -1,0 +1,33 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block content %}
+    <section class="site-main section">
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h2 class="header-icon">
+                    <span class="icon icon-grid" aria-hidden="true"></span>
+                    <span>{{ 'title.index'|trans }}</span>
+                </h2>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <p>{{ 'message.hello' }}</p>
+                {% else %}
+                    <p>{{ 'message.not_logged'|trans }}</p>
+                    <div class="pure-button-group" role="group">
+                        <a href="{{ url('auth_login') }}" class="pure-button pure-button-primary">
+                            <span class="icon icon-login" aria-hidden="true"></span>
+                            {{ 'message.login'|trans }}
+                        </a>
+                        <a href="{{ url('auth_register') }}" class="pure-button">
+                            <span class="icon icon-add-user" aria-hidden="true"></span>
+                            {{ 'message.register'|trans }}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

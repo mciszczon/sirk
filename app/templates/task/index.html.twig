@@ -1,0 +1,91 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.task_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-list" aria-hidden="true"></span>
+                    <span>{{ 'title.task_list'|trans }}</span>
+                </h3>
+
+                <div class="pure-g panels panels-2">
+                    <a class="pure-u panel panel-primary hoverable" href="{{ url('task_add', { 'project_id': project.id }) }}">
+                        <div class="panel-body panel-content">
+                            <h4 class="panel-title">
+                                <span class="icon icon-list" aria-hidden="true"></span> Add new task
+                            </h4>
+                        </div>
+                    </a>
+                    {% if show_done is not defined or show_done == '0' %}
+                        <a class="pure-u panel hoverable" href="{{ url('task_index', { 'project_id': project.id, 'show_done': true }) }}">
+                            <div class="panel-body panel-content">
+                                <h4 class="panel-title">
+                                    <span class="icon icon-eye" aria-hidden="true"></span> {{ 'label.finished_tasks'|trans }}
+                                </h4>
+                            </div>
+                        </a>
+                    {% elseif show_done is defined and show_done == '1' %}
+                        <a class="pure-u panel hoverable" href="{{ url('task_index', { 'project_id': project.id, 'show_done': false }) }}">
+                            <div class="panel-body panel-content">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> {{ 'label.finished_tasks'|trans }}
+                                </h4>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Panels -->
+                    {% if tasks|length %}
+                        <div class="pure-g panels tasks margin-top">
+                            {% for row in tasks %}
+                                {% if row.done == '0' %}
+                                    <a class="pure-u panel hoverable" href="{{ url('task_view', { 'id': row.id, 'project_id': project.id }) }}">
+                                        <div class="panel-body panel-content">
+                                            <h4 class="panel-title">
+                                                <img class="task-assignment" src="http://placehold.it/60x60" alt="">
+                                                <span>{{ row.name }}</span>
+                                            </h4>
+                                            <span class="priority high">{{ row.priority_id }}</span>
+                                        </div>
+                                    </a>
+                                {% else %}
+                                    <a class="pure-u panel hoverable" href="{{ url('task_view', { 'id': row.id, 'project_id': project.id }) }}">
+                                        <div class="panel-body panel-content">
+                                            <h4 class="panel-title">
+                                                <img class="task-assignment" src="http://placehold.it/60x60" alt="">
+                                                <span>{{ row.name }}</span>
+                                            </h4>
+                                            <span class="priority high">{{ row.priority_id }}</span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="pure-g pure-g-wide">
+                            <div class="pure-u-1">
+                                <p>{{ 'message.no_tasks'|trans }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                {% include 'default/_paginator.html.twig' with {
+                paginator: paginator,
+                route_name: 'task_index_paginated',
+                } %}
+
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

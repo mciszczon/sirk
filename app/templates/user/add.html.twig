@@ -1,0 +1,22 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'title.user_add'|trans }}{% endblock %}
+
+{% block content %}
+    <section class="site-main section">
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h2>{{ 'title.user_add'|trans }}</h2>
+                {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked' }, action: url('user_add') }) }}
+                {{ form_widget(form) }}
+                <input type="submit" value="{{ 'action.save'|trans }}" class="pure-button pure-button-primary" />
+                {{ form_end(form) }}
+
+                <a class="pure-button" href="{{ url('user_index') }}">
+                    <span class="icon icon-back"></span>
+                    <span>{{ 'label.back'|trans }}</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

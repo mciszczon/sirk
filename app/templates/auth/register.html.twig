@@ -1,0 +1,31 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'title.auth_register'|trans }}{% endblock %}
+
+{% block content %}
+    <section class="site-main section">
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h1>{{ 'title.auth_register'|trans }}</h1>
+
+                {% if error is defined and error|length %}
+                    {% include 'default/_single_alert_message.html.twig' with {
+                    is_single_message: true,
+                    is_dismissible: false,
+                    type: 'danger',
+                    message: error,
+                    } %}
+                {% endif %}
+
+                <div>
+                    {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked' }, action: path('auth_register') }) }}
+                    {{ form_widget(form) }}
+                    <button type="submit" title="{{ 'action.register'|trans }}" class="pure-button pure-button-primary">
+                        {{ 'action.register'|trans }}
+                    </button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.user_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    <section class="site-main section">
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h2 class="header-icon">
+                    <span class="icon icon-grid" aria-hidden="true"></span>
+                    <span>{{ 'title.user_list'|trans }}</span>
+                </h2>
+
+                {% if paginator.data|length %}
+                    <table class="pure-table pure-table-bordered margin-top">
+                        <thead class="visuallyhidden">
+                        <tr>
+                            <th>{{ 'label.thead_title'|trans }}</th>
+                            <th>{{ 'label.thead_crud'|trans }}</th>
+                        </tr>
+                        </thead>
+                        {% for row in paginator.data %}
+                            <tr>
+                                <td>{{ row.login }}</td>
+                                <td>
+                                    <div class="pure-button-group" role="group">
+                                        <a class="pure-button" href="{{ url('user_view', {'id': row.id }) }}" title="{{ 'label.view'|trans }}">
+                                            <span class="hidden">{{ 'label.view'|trans }}</span>
+                                            <span class="icon icon-eye"></span>
+                                        </a>
+                                        <a class="pure-button" href="{{ url('user_edit', {'id': row.id }) }}" title="{{ 'label.edit'|trans }}">
+                                            <span class="hidden">{{ 'label.edit'|trans }}</span>
+                                            <span class="icon icon-edit"></span>
+                                        </a>
+                                        <a class="pure-button" href="{{ url('user_delete', {'id': row.id }) }}" title="{{ 'label.remove'|trans }}">
+                                            <span class="hidden">{{ 'label.remove'|trans }}</span>
+                                            <span class="icon icon-remove-user"></span>
+                                        </a>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                    <a class="pure-button margin-top" href="{{ url('user_add') }}">
+                        <span class="icon icon-add-user"></span>
+                        <span>{{ 'label.add_user'|trans }}</span>
+                    </a>
+
+                    {% include 'default/_paginator.html.twig' with {
+                    paginator: paginator,
+                    route_name: 'user_index_paginated',
+                    } %}
+
+                {% else %}
+                    <p>{{ 'message.empty_list'|trans }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'title.project_edit'|trans({'%id%': project.id}) }}{% endblock %}
+
+{% form_theme form with ['bootstrap_3_horizontal_layout.html.twig', 'form/form_errors.html.twig'] %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h2 class="header-icon">
+                    <span class="icon icon-cog" aria-hidden="true"></span>
+                    <span>{{ 'title.project_edit'|trans }}</span>
+                </h2>
+
+                {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked' }, action: url('project_edit', {'id': project.id}) }) }}
+                {{ form_widget(form) }}
+                <div class="pure-button-group margin-top">
+                    <button type="submit" class="pure-button pure-button-primary margin-top">
+                        {{ 'action.save'|trans }}
+                    </button>
+                    <a href="{{ url('project_view', { 'id': project.id }) }}" class="pure-button">
+                        {{ 'label.cancel'|trans }}
+                    </a>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

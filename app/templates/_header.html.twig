@@ -1,0 +1,60 @@
+<header class="site-header section-collapsed">
+    <div class="pure-g pure-g-wide">
+        <div class="pure-u-1">
+            <nav class="main-menu">
+                <h1 class="site-title">
+                    <a href="{{ url('homepage') }}" class="site-title-link">
+                        <img class="site-title-logo" src="{{ asset('img/sirk-full.svg') }}" alt="Sirk - logo">
+                        <span class="site-title-menu">
+                                <span class="visually-hidden">Menu</span>
+                                <span class="icon icon-menu" aria-hidden="true"></span>
+                            </span>
+                    </a>
+                </h1>
+                <ul class="main-menu-list">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <li class="main-menu-item">
+                            <a href="" class="main-menu-link">
+                                <span class="icon icon-home" aria-hidden="true"></span>
+                                <span>{{ 'subpage.dashboard'|trans }}</span>
+                            </a>
+                        </li>
+                        <li class="main-menu-item">
+                            <a href="{{ url('project_index') }}" class="main-menu-link">
+                                <span class="icon icon-grid" aria-hidden="true"></span>
+                                <span>{{ 'subpage.projects'|trans }}</span>
+                            </a>
+                        </li>
+                        <li class="main-menu-item">
+                            <a href="{{ url('profile_view') }}" class="main-menu-link">
+                                <span class="icon icon-user" aria-hidden="true"></span>
+                                <span>{{ 'subpage.profile'|trans }}</span>
+                            </a>
+                        </li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="main-menu-item">
+                                <a href="{{ url('user_index') }}" class="main-menu-link">
+                                    <span class="icon icon-users" aria-hidden="true"></span>
+                                    <span>{{ 'subpage.users'|trans }}</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="main-menu-item">
+                                <a href="{{ url('auth_logout') }}" class="main-menu-link">
+                                    <span class="icon icon-log-out" aria-hidden="true"></span>
+                                    <span>{{ 'auth.logout.label'|trans }}</span>
+                                </a>
+                        </li>
+                    {% else %}
+                        <li class="main-menu-item">
+                                <a href="{{ url('auth_login') }}" class="main-menu-link">
+                                    <span class="icon icon-login" aria-hidden="true"></span>
+                                    <span>{{ 'auth.login.label'|trans }}</span>
+                                </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>

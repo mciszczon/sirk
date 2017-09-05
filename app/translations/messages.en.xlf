@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- Subpages -->
+            <trans-unit id="subpage.dashboard">
+                <source>subpage.dashboard</source>
+                <target>Dashboard</target>
+            </trans-unit>
+            <trans-unit id="subpage.projects">
+                <source>subpage.projects</source>
+                <target>Projects</target>
+            </trans-unit>
+            <trans-unit id="subpage.profile">
+                <source>subpage.profile</source>
+                <target>Profile</target>
+            </trans-unit>
+            <trans-unit id="subpage.settings">
+                <source>subpage.settings</source>
+                <target>Settings</target>
+            </trans-unit>
+            <trans-unit id="subpage.users">
+                <source>subpage.users</source>
+                <target>Users</target>
+            </trans-unit>
+
+            <!-- Titles -->
+            <trans-unit id="title.slogan">
+                <source>title.slogan</source>
+                <target>Project management app</target>
+            </trans-unit>
+
+            <!-- Messages -->
+            <trans-unit id="message.turn_javascript_on">
+                <source>message.turn_javascript_on</source>
+                <target>Please, turn on JavaScript to enhance your experience using Sirk app.</target>
+            </trans-unit>
+
+            <!-- Forms -->
+            <trans-unit id="priority_1">
+                <source>priority_1</source>
+                <target>Low</target>
+            </trans-unit>
+            <trans-unit id="priority_2">
+                <source>priority_2</source>
+                <target>Medium</target>
+            </trans-unit>
+            <trans-unit id="priority_3">
+                <source>priority_3</source>
+                <target>High</target>
+            </trans-unit>
+
+            <!-- Rest -->
+            <trans-unit id="title.bookmarks_list">
+                <source>title.bookmarks_list</source>
+                <target>Bookmarks List</target>
+            </trans-unit>
+            <trans-unit id="title.tag_list">
+                <source>title.tag_list</source>
+                <target>Tags List</target>
+            </trans-unit>
+            <trans-unit id="title.bookmark_view">
+                <source>title.bookmark_view</source>
+                <target>View bookmark</target>
+            </trans-unit>
+            <trans-unit id="title.tag_view">
+                <source>title.tag_view</source>
+                <target>View tag</target>
+            </trans-unit>
+            <trans-unit id="message.empty_list">
+                <source>message.empty_list</source>
+                <target>The list is empty!</target>
+            </trans-unit>
+            <trans-unit id="message.bookmark_none">
+                <source>message.bookmark_none</source>
+                <target>No bookmark found!</target>
+            </trans-unit>
+            <trans-unit id="message.tag_none">
+                <source>message.tag_none</source>
+                <target>No tag found!</target>
+            </trans-unit>
+            <trans-unit id="label.view">
+                <source>label.view</source>
+                <target>View</target>
+            </trans-unit>
+            <trans-unit id="label.back_to_list">
+                <source>label.back_to_list</source>
+                <target>Go back</target>
+            </trans-unit>
+            <trans-unit id="label.add_tag">
+                <source>label.add_tag</source>
+                <target>Add a tag</target>
+            </trans-unit>
+            <trans-unit id="label.nav.prev">
+                <source>label.nav.prev</source>
+                <target>Previous page</target>
+            </trans-unit>
+            <trans-unit id="label.nav.next">
+                <source>label.nav.next</source>
+                <target>Next page</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

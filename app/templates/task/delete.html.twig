@@ -1,0 +1,74 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'title.task_delete'|trans({'%id%': task.id}) }}{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-list" aria-hidden="true"></span>
+                    <span>{{ 'title.task_delete'|trans }}</span>
+                </h3>
+
+                <!-- Panels -->
+                <div class="pure-g panels task-view">
+                    <div class="pure-u panel">
+                        <div class="panel-body">
+                            <div class="panel-head">
+                                <span class="priority high">{{ task.priority_id }}</span>
+                                <h4 class="panel-title">
+                                    <span>{{ task.name }}</span>
+                                </h4>
+                                <div class="panel-meta">
+                                    <span>
+                                        {% if task.date %}
+                                            {{ task.date }}
+                                        {% else %}
+                                            {{ 'message.no_due_date'|trans }}
+                                        {% endif %}
+                                    </span>
+                                    <span>
+                                        {% if task.user_id %}
+                                            {{ 'message.assignment'|trans }}: <a href="{{ url('user_view', { 'id': task.user_id }) }}">{{ user.login }}</a>
+                                        {% else %}
+                                            {{ 'message.no_assignment'|trans }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="panel-content">
+                                <h5>{{ 'title.task_delete'|trans({'%id%': task.id}) }}</h5>
+                                <p>{{ 'message.delete_item'|trans }} <strong>{{ task.name }}</strong></p>
+                                {{ form_start(form, { method: 'post', attr: { 'id': 'delete' }, action: url('task_delete', {'id': task.id, 'project_id': project.id }) }) }}
+                                {{ form_widget(form) }}
+                                {{ form_end(form) }}
+                            </div>
+                            <div class="panel-foot">
+                                <ul class="controls">
+                                    <li>
+                                        <button form="delete">
+                                            <span class="icon icon-trash" aria-hidden="true"></span>
+                                            <span>{{ 'button.remove'|trans }}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('task_index', { 'project_id': project.id }) }}">
+                                            <span class="icon icon-cross" aria-hidden="true"></span>
+                                            <span>{{ 'button.cancel'|trans }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

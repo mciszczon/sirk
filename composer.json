@@ -1,0 +1,12 @@
+{
+  "name": "mciszczon/sirk",
+  "description": "Simple project management app built with Silex framework.",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "mciszczon",
+      "email": "contact@mciszczon.pl"
+    }
+  ]
+}

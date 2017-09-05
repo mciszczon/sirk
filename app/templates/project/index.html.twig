@@ -1,0 +1,55 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.project_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    <section class="site-main section">
+
+        <!-- Projects -->
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h2 class="header-icon">
+                    <span class="icon icon-grid" aria-hidden="true"></span>
+                    <span>{{ 'title.project_list'|trans }}</span>
+                </h2>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <ul class="pure-g panels projects">
+                        <li class="pure-u panel panel-primary panel-centered panel-control hoverable">
+                            <a class="panel-body panel-content" href="">
+                                <span class="icon icon-add-to-list" aria-hidden="true"></span>
+                                <span>Add project</span>
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
+
+                {% if paginator.data|length %}
+                    <ul class="pure-g panels panels-3 projects">
+                        {% for row in paginator.data %}
+                            <li class="pure-u panel hoverable">
+                                <a class="panel-body" href="{{ url('project_view', { 'id': row.id }) }}">
+                                    <div class="panel-head">
+                                        <h3 class="panel-title">{{ row.name }}</h3>
+                                        <span class="panel-meta">{{ row.subtitle }}</span>
+                                    </div>
+                                    <div class="panel-content">
+                                        <p>{{ row.description }}</p>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% include 'default/_paginator.html.twig' with {
+                    paginator: paginator,
+                    route_name: 'project_index_paginated',
+                    } %}
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

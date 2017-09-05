@@ -1,0 +1,47 @@
+<section class="site-sidebar section">
+    <div class="pure-g pure-g-wide">
+        <div class="pure-u-1">
+            <h2 class="header-icon">
+                <span>{{ project.name }}</span>
+                <span class="header-label">{{ project.subtitle }}</span>
+            </h2>
+            <p>{{ project.description }}</p>
+            <div class="project-menu">
+                <ul class="project-menu-list">
+                    <li class="project-menu-item">
+                        <a href="{{ url('project_view', { 'id': project.id }) }}" class="project-menu-link">
+                            {{ 'subpage.overview'|trans }}
+                        </a>
+                    </li>
+                    <li class="project-menu-item">
+                        <a href="{{ url('task_index', { 'project_id': project.id }) }}" class="project-menu-link">
+                            {{ 'subpage.tasks'|trans }}
+                        </a>
+                    </li>
+                    <li class="project-menu-item">
+                        <a href="" class="project-menu-link">
+                            {{ 'subpage.files'|trans }}
+                        </a>
+                    </li>
+                    <li class="project-menu-item">
+                        <a href="" class="project-menu-link">
+                            {{ 'subpage.notes'|trans }}
+                        </a>
+                    </li>
+                    <li class="project-menu-item">
+                        <a href="" class="project-menu-link">
+                            {{ 'subpage.discussion'|trans }}
+                        </a>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="project-menu-item">
+                            <a href="{{ url('project_edit', { 'id': project.id }) }}" class="project-menu-link">
+                                {{ 'subpage.settings'|trans }}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

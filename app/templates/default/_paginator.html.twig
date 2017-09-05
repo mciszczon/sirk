@@ -1,0 +1,32 @@
+{#
+    Default view for paginator.
+
+    parameters:
+        * `paginator` - paginator
+        * `route_name` - route name
+#}
+<nav aria-label="paginator" class="margin-top">
+    <div class="pure-button-group" role="group">
+        {% if paginator.page > 1 %}
+            {% set previous = (paginator.page - 1) %}
+            <a class="pure-button" href="{{ url(route_name, {'page': previous}) }}" title="{{ 'label.nav.prev'|trans }}">
+                <span aria-hidden="true">&larr;</span>{{ 'label.nav.prev'|trans }}
+            </a>
+        {% else %}
+            <button class="pure-button pure-button-disabled" disabled title="{{ 'label.nav.prev'|trans }}">
+                <span aria-hidden="true">&larr;</span>{{ 'label.nav.prev'|trans }}
+            </button>
+        {%  endif %}
+
+        {% if paginator.page < paginator.pages_number %}
+            {% set next = (paginator.page + 1) %}
+            <a class="pure-button" href="{{ url(route_name, {'page': next}) }}" title="{{ 'label.nav.next'|trans }}">
+                {{ 'label.nav.next'|trans }}<span aria-hidden="true">&rarr;</span>
+            </a>
+        {% else %}
+            <button class="pure-button pure-button-disabled" disabled title="{{ 'label.nav.next'|trans }}">
+                {{ 'label.nav.next'|trans }}<span aria-hidden="true">&rarr;</span>
+            </button>
+        {% endif  %}
+    </div>
+</nav>

@@ -1,0 +1,19 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'title.tag_add'|trans }}{% endblock %}
+
+{% form_theme form with ['bootstrap_3_horizontal_layout.html.twig', 'form/form_errors.html.twig'] %}
+
+{% block content %}
+    <h1>{{ 'title.tag_add'|trans }}</h1>
+    {{ form_start(form, { method: 'post', action: url('tag_add') }) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="{{ 'action.save'|trans }}" class="btn btn-success" />
+    {{ form_end(form) }}
+
+    <a class="btn btn-default" href="{{ url('tag_index') }}">
+        <span class="glyphicon glyphicon-backward"></span>
+        <span>{{ 'label.back'|trans }}</span>
+    </a>
+
+{% endblock %}

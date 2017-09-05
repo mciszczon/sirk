@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>{% block title '' %} - Sirk</title>
+        <meta name="description" content="Sirk - project management app">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+        <script src="{{ asset('js/vendor/modernizr-2.8.3.min.js') }}"></script>
+    </head>
+    <body>
+        {% include '_header.html.twig' %}
+
+        {% block content %}{% endblock %}
+
+        {% include '_footer.html.twig' %}
+    </body>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-3.2.1.min.js') }}"><\/script>')
+    </script>
+    <script src="{{ asset('js/plugins.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
+</html>

@@ -1,0 +1,29 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'title.auth_login'|trans }}{% endblock %}
+
+{% block content %}
+    <section class="site-main section">
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h1>{{ 'title.auth_login'|trans }}</h1>
+
+                {% if error is defined and error|length %}
+                {% include 'default/_single_alert_message.html.twig' with {
+                is_single_message: true,
+                is_dismissible: false,
+                type: 'danger',
+                message: error,
+                } %}
+                {% endif %}
+
+                <div>
+                    {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked' }, action: path('auth_login_check') }) }}
+                    {{ form_widget(form) }}
+                    <input type="submit" value="{{ 'action.login'|trans }}" class="pure-button pure-button-primary" />
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

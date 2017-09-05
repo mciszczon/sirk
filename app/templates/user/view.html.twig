@@ -1,0 +1,75 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.user_view'|trans }}
+{% endblock %}
+
+{% block content %}
+    <section class="site-main section">
+
+        <!-- Profile card -->
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h2 class="header-icon">
+                    <span class="icon icon-user" aria-hidden="true"></span>
+                    <span>{{ 'title.user_view'|trans }}</span>
+                </h2>
+
+                {% if user|length %}
+                    <div class="pure-g panels">
+                        <div class="pure-u panel panel-collapsed panel-horizontal">
+                            <div class="panel-body" style="display: flex; align-items: center;">
+                                <div class="panel-cover-image">
+                                    <img class="pure-img" src="{{ asset('img/profile.png') }}" alt="{{ user.login }}">
+                                </div>
+                                <div class="panel-content">
+                                    <div class="panel-head">
+                                        <h3 class="panel-title">{{ user.login }}</h3>
+                                        <p class="meta">@{{ user.login }}</p>
+                                    </div>
+                                    <div class="panel-content">
+                                        <h4 class="visually-hidden">{{ 'title.profile_general'|trans }}</h4>
+                                        <dl class="margin-bottom">
+                                            <dt>
+                                                <span class="icon icon-user" aria-hidden="true"></span>
+                                                {{ 'title.login'|trans }}
+                                            </dt>
+                                            <dd>{{ user.login }}</dd>
+                                            <dt>
+                                                <span class="icon icon-mail" aria-hidden="true"></span>
+                                                {{ 'title.email'|trans }}
+                                            </dt>
+                                            <dd>{{ user.email }}</dd>
+                                        </dl>
+                                    </div>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <div class="panel-foot">
+                                            <ul class="controls">
+                                                <li>
+                                                    <a href="{{ url('user_edit', {'id': user.id }) }}">
+                                                        <span class="icon icon-edit" aria-hidden="true"></span>
+                                                        <span>{{ 'button.edit'|trans }}</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('user_delete', {'id': user.id }) }}">
+                                                        <span class="icon icon-trash" aria-hidden="true"></span>
+                                                        <span>{{ 'button.delete'|trans }}</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>{{ 'message.user_none'|trans }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}
