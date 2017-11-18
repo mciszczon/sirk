@@ -2,7 +2,7 @@
 
 {% block title %}{{ 'title.project_edit'|trans({'%id%': project.id}) }}{% endblock %}
 
-{% form_theme form with ['bootstrap_3_horizontal_layout.html.twig', 'form/form_errors.html.twig'] %}
+{% form_theme form with ['form/form_errors.html.twig'] %}
 
 {% block content %}
     {% include('default/_submenu.html.twig') %}
@@ -15,17 +15,34 @@
                     <span>{{ 'title.project_edit'|trans }}</span>
                 </h2>
 
-                {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked' }, action: url('project_edit', {'id': project.id}) }) }}
-                {{ form_widget(form) }}
-                <div class="pure-button-group margin-top">
-                    <button type="submit" class="pure-button pure-button-primary margin-top">
-                        {{ 'action.save'|trans }}
-                    </button>
-                    <a href="{{ url('project_view', { 'id': project.id }) }}" class="pure-button">
-                        {{ 'label.cancel'|trans }}
-                    </a>
+                <div class="pure-g panels">
+                    <div class="pure-u-1 panel">
+                        <div class="panel-body">
+                            <div class="panel-content">
+                                {{ form_start(form, { method: 'post', attr: { 'id': 'project', 'class': 'form form-stacked' }, action: url('project_edit', {'id': project.id}) }) }}
+                                {{ form_widget(form) }}
+                                {{ form_end(form) }}
+                            </div>
+                            <div class="panel-foot">
+                                <ul class="controls">
+                                    <li>
+                                        <button form="project" title="{{ 'button.save'|trans }}">
+                                            <span class="icon icon-check" aria-hidden="true"></span>
+                                            {{ 'button.save'|trans }}
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('project_view', { 'id': project.id }) }}">
+                                            <span class="icon icon-cross" aria-hidden="true"></span>
+                                            {{ 'button.cancel'|trans }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {{ form_end(form) }}
+
             </div>
         </div>
     </section>

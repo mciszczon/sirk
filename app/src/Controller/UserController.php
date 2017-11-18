@@ -6,11 +6,12 @@ namespace Controller;
 
 use Repository\UserRepository;
 use Silex\Application;
-use Silex\Api\ControllerProviderInterface;
 use Form\UserType;
+use Form\UserEditType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+
 /**
  * Class UserController.
  *
@@ -19,12 +20,17 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 class UserController extends BaseController
 {
     /**
-     * {@inheritdoc}
+     * Routing settings.
+     *
+     * @param \Silex\Application $app Silex application
+     *
+     * @return \Silex\ControllerCollection Result
      */
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->get('/', [$this, 'indexAction'])->bind('user_index');
+        $controller->get('/', [$this, 'indexAction'])
+            ->bind('user_index');
         $controller->get('/page/{page}', [$this, 'indexAction'])
             ->value('page', 1)
             ->bind('user_index_paginated');
@@ -59,19 +65,32 @@ class UserController extends BaseController
      */
     public function indexAction(Application $app, $page = 1)
     {
+        $currentUserId = $this->getUserId($app);
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app->redirect($app['url_generator']->generate('profile_view'));
+        }
+
         $userRepository = new UserRepository($app['db']);
 
-        return $app['twig']->render(
-            'user/index.html.twig',
-            ['paginator' => $userRepository->findAllPaginated($page)]
-        );
+        if ($this->checkIfAdmin($app, $currentUserId)) {
+            return $app['twig']->render(
+                'user/index.html.twig',
+                [
+                    'paginator' => $userRepository->findAllPaginated($page),
+                    'user' => $currentUserId,
+                ]
+            );
+        } else {
+            return $app->redirect($app['url_generator']->generate('profile_view'));
+        }
+
     }
 
     /**
      * View action.
      *
      * @param \Silex\Application $app Silex application
-     * @param string             $login  User slogin
+     * @param int                $id  User ID
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP Response
      */
@@ -83,6 +102,7 @@ class UserController extends BaseController
             'user/view.html.twig',
             [
                 'user' => $userRepository->getUserById($id),
+                'current_user' => $this->getUserId($app),
             ]
         );
     }
@@ -104,6 +124,7 @@ class UserController extends BaseController
             'user/view.html.twig',
             [
                 'user' => $user,
+                'current_user' => true,
             ]
         );
     }
@@ -118,6 +139,11 @@ class UserController extends BaseController
      */
     public function addAction(Application $app, Request $request)
     {
+        $currentUserId = $this->getUserId($app);
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app->redirect($app['url_generator']->generate('profile_view'));
+        }
+
         $user = [];
 
         $form = $app['form.factory']->createBuilder(
@@ -130,8 +156,10 @@ class UserController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
             $tagRepository = new UserRepository($app['db']);
-            $tagRepository->save($form->getData());
+            $tagRepository->save($app, $data);
 
             $app['session']->getFlashBag()->add(
                 'messages',
@@ -141,7 +169,7 @@ class UserController extends BaseController
                 ]
             );
 
-            return $app->redirect($app['url_generator']->generate('user_index'), 301);
+            return $app->redirect($app['url_generator']->generate('homepage'), 301);
         }
 
         return $app['twig']->render(
@@ -164,6 +192,11 @@ class UserController extends BaseController
      */
     public function editAction(Application $app, $id, Request $request)
     {
+        $currentUserId = $this->getUserId($app);
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app->redirect($app['url_generator']->generate('profile_view'));
+        }
+
         $userRepository = new UserRepository($app['db']);
         $user = $userRepository->getUserById($id);
 
@@ -180,16 +213,17 @@ class UserController extends BaseController
         }
 
         $form = $app['form.factory']->createBuilder(
-            UserType::class,
+            UserEditType::class,
             $user,
             [
-                'user_repository' => new UserRepository($app['db'])
+                'user_repository' => new UserRepository($app['db']),
+                'user_id' => $id,
             ]
         )->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->save($form->getData());
+            $userRepository->save($app, $form->getData());
 
             $app['session']->getFlashBag()->add(
                 'messages',
@@ -222,6 +256,15 @@ class UserController extends BaseController
      */
     public function deleteAction(Application $app, $id, Request $request)
     {
+        $currentUserId = $this->getUserId($app);
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app->redirect($app['url_generator']->generate('profile_view'));
+        }
+
+        if ($currentUserId === $id ) {
+            return $app->redirect($app['url_generator']->generate('user_view', ['id' => $id]));
+        }
+
         $userRepository = new UserRepository($app['db']);
         $user = $userRepository->getUserById($id);
 

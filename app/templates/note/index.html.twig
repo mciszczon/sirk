@@ -1,0 +1,57 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.note_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-text-document" aria-hidden="true"></span>
+                    <span>{{ 'title.note_list'|trans }}</span>
+                </h3>
+
+                <div class="pure-g panels">
+                    <a class="pure-u panel panel-primary hoverable" href="{{ url('note_add', { 'project_id': project.id }) }}">
+                        <div class="panel-body panel-content">
+                            <h4 class="panel-title">
+                                <span class="icon icon-add-to-list" aria-hidden="true"></span>
+                                {{ 'label.note_add'|trans }}
+                            </h4>
+                        </div>
+                    </a>
+                </div>
+
+                {% if paginator.data|length %}
+                    <!-- Panels -->
+                    <div class="pure-g panels">
+                        {% for row in paginator.data %}
+                            <a class="pure-u panel hoverable" href="{{ url('note_view', { 'id': row.id, 'project_id': project.id }) }}">
+                                <div class="panel-body panel-content">
+                                    <h4 class="panel-title">
+                                        <span>{{ row.title }}</span>
+                                    </h4>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>{{ 'message.no_records_found'|trans }}</p>
+                {% endif %}
+
+                {% include 'default/_paginator.html.twig' with {
+                paginator: paginator,
+                route_name: 'note_index_paginated',
+                } %}
+
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

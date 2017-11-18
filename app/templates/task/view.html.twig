@@ -1,7 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block title %}
-    {{ 'title.project_view'|trans }}
+    {{ 'title.task_view'|trans }}
 {% endblock %}
 
 {% block content %}
@@ -22,21 +22,27 @@
                     <div class="pure-u panel">
                         <div class="panel-body">
                             <div class="panel-head">
-                                <span class="priority high">{{ task.priority_id }}</span>
+                                {% if task.priority_id == 1 %}
+                                    <span class="priority low">{{ 'label.priority_low'|trans }}</span>
+                                {% elseif task.priority_id == 2 %}
+                                    <span class="priority medium">{{ 'label.priority_medium'|trans }}</span>
+                                {% elseif task.priority_id == 3 %}
+                                    <span class="priority high">{{ 'label.priority_high'|trans }}</span>
+                                {% endif %}
                                 <h4 class="panel-title">
                                     <span>{{ task.name }}</span>
                                 </h4>
                                 <div class="panel-meta">
                                     <span>
                                         {% if task.date %}
-                                            {{ task.date }}
+                                            {{ 'message.due_to'|trans }}: {{ task.date|time_diff }}
                                         {% else %}
                                             {{ 'message.no_due_date'|trans }}
                                         {% endif %}
                                     </span>
                                     <span>
                                         {% if task.user_id %}
-                                            {{ 'message.assignment'|trans }}: <a href="{{ url('user_view', { 'id': task.user_id }) }}">{{ user.login }}</a>
+                                            {{ 'message.assigned_to'|trans }}: <a href="{{ url('user_view', { 'id': task.user_id }) }}">{{ user.login }}</a>
                                         {% else %}
                                             {{ 'message.no_assignment'|trans }}
                                         {% endif %}
@@ -45,28 +51,36 @@
                             </div>
                             <div class="panel-content">
                                 <h5>{{ 'title.description'|trans }}</h5>
-                                <p>{{ task.description }}</p>
+                                {%  if task.description %}
+                                    <p>{{ task.description }}</p>
+                                {% else %}
+                                    <p class="text-meta">{{ 'message.no_description'|trans }}</p>
+                                {% endif %}
                             </div>
                             <div class="panel-foot">
                                 <ul class="controls">
+                                    {% if task.done == 0 %}
                                     <li>
-                                        <a href="">
+                                        <a href="{{ url('task_finish', { 'id': task.id, 'project_id': project.id }) }}">
                                             <span class="icon icon-check" aria-hidden="true"></span>
                                             <span>Finish</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="task-edit.html">
-                                            <span class="icon icon-edit" aria-hidden="true"></span>
-                                            <span>Edit</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('task_delete', { 'id': task.id, 'project_id': project.id }) }}">
-                                            <span class="icon icon-trash" aria-hidden="true"></span>
-                                            <span>{{ 'button.remove'|trans }}</span>
-                                        </a>
-                                    </li>
+                                    {% endif %}
+                                    {% if editable or is_granted('ROLE_ADMIN') %}
+                                        <li>
+                                            <a href="{{ url('task_edit', { 'id': task.id, 'project_id': project.id }) }}">
+                                                <span class="icon icon-edit" aria-hidden="true"></span>
+                                                <span>Edit</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('task_delete', { 'id': task.id, 'project_id': project.id }) }}">
+                                                <span class="icon icon-trash" aria-hidden="true"></span>
+                                                <span>{{ 'button.delete'|trans }}</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>

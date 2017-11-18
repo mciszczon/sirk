@@ -13,9 +13,14 @@
                     <span>{{ 'title.user_list'|trans }}</span>
                 </h2>
 
+                <a class="pure-button pure-button-primary margin-top" href="{{ url('user_add') }}">
+                    <span class="icon icon-add-user"></span>
+                    <span>{{ 'label.add_user'|trans }}</span>
+                </a>
+
                 {% if paginator.data|length %}
                     <table class="pure-table pure-table-bordered margin-top">
-                        <thead class="visuallyhidden">
+                        <thead>
                         <tr>
                             <th>{{ 'label.thead_title'|trans }}</th>
                             <th>{{ 'label.thead_crud'|trans }}</th>
@@ -26,29 +31,26 @@
                                 <td>{{ row.login }}</td>
                                 <td>
                                     <div class="pure-button-group" role="group">
-                                        <a class="pure-button" href="{{ url('user_view', {'id': row.id }) }}" title="{{ 'label.view'|trans }}">
-                                            <span class="hidden">{{ 'label.view'|trans }}</span>
+                                        <a class="pure-button" href="{{ url('user_view', {'id': row.id }) }}" title="{{ 'button.view'|trans }}">
+                                            <span class="hidden">{{ 'button.view'|trans }}</span>
                                             <span class="icon icon-eye"></span>
                                         </a>
-                                        <a class="pure-button" href="{{ url('user_edit', {'id': row.id }) }}" title="{{ 'label.edit'|trans }}">
-                                            <span class="hidden">{{ 'label.edit'|trans }}</span>
+                                        <a class="pure-button" href="{{ url('user_edit', {'id': row.id }) }}" title="{{ 'button.edit'|trans }}">
+                                            <span class="hidden">{{ 'button.edit'|trans }}</span>
                                             <span class="icon icon-edit"></span>
                                         </a>
-                                        <a class="pure-button" href="{{ url('user_delete', {'id': row.id }) }}" title="{{ 'label.remove'|trans }}">
-                                            <span class="hidden">{{ 'label.remove'|trans }}</span>
-                                            <span class="icon icon-remove-user"></span>
-                                        </a>
+                                        {% if row.id != user %}
+                                            <a class="pure-button pure-button-delete" href="{{ url('user_delete', {'id': row.id }) }}" title="{{ 'button.delete'|trans }}">
+                                                <span class="hidden">{{ 'button.delete'|trans }}</span>
+                                                <span class="icon icon-remove-user"></span>
+                                            </a>
+                                        {% endif %}
                                     </div>
 
                                 </td>
                             </tr>
                         {% endfor %}
                     </table>
-
-                    <a class="pure-button margin-top" href="{{ url('user_add') }}">
-                        <span class="icon icon-add-user"></span>
-                        <span>{{ 'label.add_user'|trans }}</span>
-                    </a>
 
                     {% include 'default/_paginator.html.twig' with {
                     paginator: paginator,

@@ -1,0 +1,61 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.note_delete'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-text-document" aria-hidden="true"></span>
+                    <span>{{ 'title.note_delete'|trans }}</span>
+                </h3>
+
+                <p>{{ 'message.delete_note'|trans }}</p>
+
+                {{ form_start(form, { method: 'post', attr: { 'id': 'note' }, action: url('note_delete', {'id': note.id, 'project_id': project.id }) }) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+
+                <!-- Panels -->
+                <div class="pure-g panels task-view">
+                    <div class="pure-u panel">
+                        <div class="panel-body">
+                            <div class="panel-head">
+                                <h4 class="panel-title">
+                                    <span>{{ note.title }}</span>
+                                </h4>
+                            </div>
+                            <div class="panel-content">
+                                {{ note.content|nl2br }}
+                            </div>
+                            <div class="panel-foot">
+                                <ul class="controls">
+                                    <li>
+                                        <button form="note" class="delete">
+                                            <span class="icon icon-trash" aria-hidden="true"></span>
+                                            <span>{{ 'button.delete'|trans }}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('note_view', { 'id': note.id, 'project_id': project.id }) }}">
+                                            <span class="icon icon-cross" aria-hidden="true"></span>
+                                            <span>{{ 'button.cancel'|trans }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

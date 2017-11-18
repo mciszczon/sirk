@@ -2,7 +2,6 @@
 /**
  * User repository
  */
-
 namespace Repository;
 
 use Silex\Application;
@@ -187,6 +186,37 @@ class UserRepository
     }
 
     /**
+     * Gets user roles IDs by User ID.
+     *
+     * @param integer $userId User ID
+     * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return array Result
+     */
+    public function getUserRolesIds($userId)
+    {
+        $roles = [];
+
+        try {
+            $queryBuilder = $this->db->createQueryBuilder();
+            $queryBuilder->select('r.id')
+                ->from('user', 'u')
+                ->innerJoin('u', 'role', 'r', 'u.role_id = r.id')
+                ->where('u.id = :id')
+                ->setParameter(':id', $userId, \PDO::PARAM_INT);
+            $result = $queryBuilder->execute()->fetchAll();
+
+            if ($result) {
+                $roles = array_column($result, 'id');
+            }
+
+            return $roles;
+        } catch (DBALException $exception) {
+            return $roles;
+        }
+    }
+
+    /**
      * Gets user by User ID.
      *
      * @param $id string UserId
@@ -205,13 +235,11 @@ class UserRepository
     }
 
     /**
-     * Gets user by User ID.
+     * Gets user by User login.
      *
-     * @param $id string UserId
-     * @return array Result
-     * @internal param int $userId User ID
+     * @param string $login User login
+     * @return array|mixed Result
      */
-
     public function findOneByLogin($login)
     {
         $queryBuilder = $this->queryAll();
@@ -223,6 +251,11 @@ class UserRepository
     }
 
 
+    /**
+     * Fetch all users.
+     *
+     * @return array
+     */
     public function findAll()
     {
         $queryBuilder = $this->queryAll();
@@ -232,6 +265,8 @@ class UserRepository
     }
 
     /**
+     * Query all users.
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     public function queryAll()
@@ -242,7 +277,9 @@ class UserRepository
     }
 
     /**
-     * @return array
+     * Fetch all roles.
+     *
+     * @return array Result
      */
     public function getAllRoles()
     {
@@ -255,7 +292,7 @@ class UserRepository
     }
 
     /**
-     * Get records paginated.
+     * Get users paginated.
      *
      * @param int $page Current page number
      *
@@ -298,18 +335,25 @@ class UserRepository
     /**
      * Save record.
      *
+     * @param Application $app Application
      * @param array $user User
      *
      * @return boolean Result
      */
-    public function save($user)
+    public function save($app, $user)
     {
         unset($user['role_name']);
+
+        if (isset($user['password'])) {
+            $user['password'] = $app['security.encoder.bcrypt']->encodePassword($user['password'], '');
+        }
 
         if (isset($user['id']) && ctype_digit((string) $user['id'])) {
             // update record
             $id = $user['id'];
             unset($user['id']);
+
+            if ($user['password'] === null) unset($user['password']);
 
             return $this->db->update('user', $user, ['id' => $id]);
         } else {
@@ -320,18 +364,96 @@ class UserRepository
     }
 
     /**
-     * Remove record.
+     * Delete user.
      *
      * @param array $user User
-     *
-     * @return boolean Result
+     * @throws DBALException
      */
-    public function delete($user)
+    function delete($user)
     {
-        if (isset($user['id']) && ctype_digit((string) $user['id'])) {
-            return $this->db->delete('user', $user);
-        } else {
-            throw new \InvalidArgumentException('Invalid parameter type');
+        $this->db->beginTransaction();
+
+        try {
+            $this->removeLinkedProjects($user['id']);
+            $this->removeLinkedFiles($user['id']);
+            $this->removeLinkedMessages($user['id']);
+            $this->removeLinkedNotes($user['id']);
+            $this->removeLinkedTasks($user['id']);
+            $this->removeAssignedTasks($this->db, $user['id']);
+            $this->db->delete('user', ['id' => $user['id']]);
+            $this->db->commit();
+        } catch (DBALException $e) {
+            $this->db->rollBack();
+            throw $e;
         }
+    }
+
+    /**
+     * Removed links between removed user and projects.
+     *
+     * @param int $userId User ID
+     * @return int
+     */
+    protected function removeLinkedProjects($userId)
+    {
+        return $this->db->delete('user_has_project', ['user_id' => $userId]);
+    }
+
+    /**
+     * Remove messages written by removed user.
+     *
+     * @param int $userId User ID
+     * @return int
+     */
+    protected function removeLinkedMessages($userId)
+    {
+        return $this->db->delete('message', ['user_id' => $userId]);
+    }
+
+    /**
+     * Remove notes owned by removed user.
+     *
+     * @param int $userId User ID
+     * @return int
+     */
+    protected function removeLinkedNotes($userId)
+    {
+        return $this->db->delete('note', ['user_id' => $userId]);
+    }
+
+    /**
+     * Remove files uploaded by removed user.
+     *
+     * @param int $userId User ID
+     * @return int
+     */
+    protected function removeLinkedFiles($userId)
+    {
+        return $this->db->delete('file', ['user_id' => $userId]);
+    }
+
+    /**
+     * Removed tasks created by removed user.
+     *
+     * @param int $userId User ID
+     * @return int
+     */
+    protected function removeLinkedTasks($userId)
+    {
+        return $this->db->delete('task', ['author_id' => $userId]);
+    }
+
+    /**
+     * Remove all assignments to removed user.
+     *
+     * @param $db
+     * @param int $userId User ID
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    protected function removeAssignedTasks($db, $userId)
+    {
+        $taskRepository = new TaskRepository($db);
+
+        return $taskRepository->deleteUserAssignments($userId);
     }
 }

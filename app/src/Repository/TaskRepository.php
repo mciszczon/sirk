@@ -1,13 +1,12 @@
 <?php
 /**
- * Tag repository.
+ * Task repository.
  */
 namespace Repository;
 
 use Doctrine\DBAL\Connection;
-use Silex\Application;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Utils\Paginator;
-use Repository\UserRepository;
 
 /**
  * Class TagRepository.
@@ -21,7 +20,7 @@ class TaskRepository
      *
      * const int NUM_ITEMS
      */
-    const NUM_ITEMS = 10;
+    const NUM_ITEMS = 5;
 
     /**
      * Doctrine DBAL connection.
@@ -31,6 +30,8 @@ class TaskRepository
     protected $db;
 
     /**
+     * User repository.
+     *
      * @var null
      */
     protected $userRepository = null;
@@ -62,16 +63,19 @@ class TaskRepository
      * Get records paginated.
      *
      * @param int $page Current page number
+     * @param int $projectId Project ID
      *
      * @return array Result
      */
-    public function findAllPaginated($page = 1)
+    public function findAllPaginated($page = 1, $projectId)
     {
-        $countQueryBuilder = $this->queryAll()
+        $countQueryBuilder = $this->queryAllForProject($projectId)
             ->select('COUNT(DISTINCT t.id) AS total_results')
             ->setMaxResults(1);
 
-        $paginator = new Paginator($this->queryAll(), $countQueryBuilder);
+        $paginator = new Paginator(
+            $this->queryAllForProject($projectId), $countQueryBuilder
+        );
         $paginator->setCurrentPage($page);
         $paginator->setMaxPerPage(self::NUM_ITEMS);
 
@@ -96,63 +100,9 @@ class TaskRepository
     }
 
     /**
-     * Find for uniqueness.
+     * Find IDs of tasks from a project.
      *
-     * @param string          $name Element name
-     * @param int|string|null $id   Element id
-     *
-     * @return array Result
-     */
-    public function findForUniqueness($name, $id = null)
-    {
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->where('t.name = :name')
-            ->setParameter(':name', $name, \PDO::PARAM_STR);
-        if ($id) {
-            $queryBuilder->andWhere('t.id <> :id')
-                ->setParameter(':id', $id, \PDO::PARAM_INT);
-        }
-
-        return $queryBuilder->execute()->fetchAll();
-    }
-
-    /**
-    * Find one record by name.
-    *
-    * @param string $name Name
-    *
-    * @return array|mixed Result
-    */
-    public function findOneByName($name)
-    {
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->where('t.name = :name')
-            ->setParameter(':name', $name, \PDO::PARAM_STR);
-        $result = $queryBuilder->execute()->fetch();
-
-        return !$result ? [] : $result;
-    }
-
-    /**
-     * Find tags by Ids.
-     *
-     * @param array $ids Tags Ids.
-     *
-     * @return array
-     */
-    public function findById($ids)
-    {
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->where('t.id IN (:ids)')
-            ->setParameter(':ids', $ids, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
-
-        return $queryBuilder->execute()->fetchAll();
-    }
-
-    /**
-     * Find ids of bookmarks with current tag.
-     *
-     * @param int $id Id of the current tag.
+     * @param int $project_id Project ID
      * @return array
      */
     public function findLinkedTasksIds($project_id)
@@ -168,10 +118,10 @@ class TaskRepository
     }
 
     /**
-     * Find bookmarks names with current tag.
+     * Fetch tasks linked to a project.
      *
-     * @param int $id Id of the current tag.
-     * @return array
+     * @param int $project_id Project ID
+     * @return array Result
      */
     public function findLinkedTasks($project_id)
     {
@@ -184,6 +134,31 @@ class TaskRepository
         return $queryBuilder->execute()->fetchAll();
     }
 
+    /**
+     * Find tasks linked to a project, that are not finished yet.
+     *
+     * @param int $project_id Project ID
+     * @return array Result
+     */
+    public function findLinkedTasksNotDone($project_id)
+    {
+        $tasksIds = $this->findLinkedTasksIds($project_id);
+
+        $queryBuilder = $this->queryAll();
+        $queryBuilder
+            ->where('t.id IN (:ids)')
+            ->andWhere('t.done = 0')
+            ->setParameter(':ids', $tasksIds, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
+
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
+     * Find ID of a user assigned to a task.
+     *
+     * @param int $task_id Task ID
+     * @return array
+     */
     public function findLinkedUserId($task_id)
     {
         $queryBuilder = $this->queryAll();
@@ -196,6 +171,12 @@ class TaskRepository
         return isset($result) ? $result['user_id'] : [];
     }
 
+    /**
+     * Fetch user assigned to a task.
+     *
+     * @param int $task_id Task ID
+     * @return mixed
+     */
     public function findLinkedUser($task_id)
     {
         $userId = $this->findLinkedUserId($task_id);
@@ -205,6 +186,30 @@ class TaskRepository
             ->setParameter(':id', $userId, \PDO::PARAM_INT);
 
         return $queryBuilder->execute()->fetch();
+    }
+
+    /**
+     * Empty all assignments of removed user to a task.
+     *
+     * @param int $userId User ID
+     * @return \Doctrine\DBAL\Driver\Statement|bool
+     */
+    public function deleteUserAssignments($userId)
+    {
+        if (isset($userId) && ctype_digit((string) $userId)) {
+            // update record
+            $queryBuilder = $this->db->createQueryBuilder();
+            $queryBuilder
+                ->update('task', 't')
+                ->set('t.user_id', ':null')
+                ->where('t.user_id = :id')
+                ->setParameter('null', null)
+                ->setParameter('id', $userId);
+
+            return $queryBuilder->execute();
+        }
+
+        return false;
     }
 
     /**
@@ -220,13 +225,13 @@ class TaskRepository
             // update record
             $id = $task['id'];
             unset($task['id']);
-
-            $task['date'] = date_format($task['date'], 'Y-m-d');
+            // avoid overwriting author when editing as admin
+            unset($task['author_id']);
 
             return $this->db->update('task', $task, ['id' => $id]);
         } else {
             // add new record
-            $task['date'] = date_format($task['date'], 'Y-m-d');
+            if (!is_string($task['date'])) $task['date'] = date_format($task['date'], 'Y-m-d');
 
             return $this->db->insert('task', $task);
         }
@@ -242,10 +247,28 @@ class TaskRepository
     public function delete($task)
     {
         if (isset($task['id']) && ctype_digit((string) $task['id'])) {
-            return $this->db->delete('task', $task);
+            return $this->db->delete('task', ['id' => $task['id']]);
         } else {
             throw new \InvalidArgumentException('Invalid parameter type');
         }
+    }
+
+    /**
+     * Finish task.
+     *
+     * @param array $task Task
+     *
+     * @return boolean Result
+     */
+    public function finish($task)
+    {
+        if (isset($task['id']) && ctype_digit((string) $task['id'])) {
+            $id = $task['id'];
+            unset($task['id']);
+
+            return $this->db->update('task', $task, ['id' => $id]);
+        }
+        else return null;
     }
 
     /**
@@ -257,7 +280,85 @@ class TaskRepository
     {
         $queryBuilder = $this->db->createQueryBuilder();
 
-        return $queryBuilder->select('t.id', 't.name', 't.description', 't.done', 't.date', 't.priority_id', 't.project_id', 't.user_id')
+        return $queryBuilder->select('t.id', 't.name', 't.description', 't.done', 't.date', 't.priority_id', 't.project_id', 't.user_id', 't.author_id')
             ->from('task', 't');
+    }
+
+    /**
+     * Query all records for a project.
+     *
+     * @param int $projectId Project ID
+     * @return QueryBuilder
+     */
+    protected function queryAllForProject($projectId)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+
+        return $queryBuilder->select('t.id', 't.name', 't.description', 't.done', 't.date', 't.priority_id', 't.project_id', 't.user_id', 't.author_id')
+            ->from('task', 't')
+            ->where('t.project_id = :id')
+            ->setParameter('id', $projectId, \PDO::PARAM_INT);
+    }
+
+    /**
+     * Find users linked to a task (author and assigned user)
+     *
+     * @param int $taskId Task ID
+     * @return array Linked users' IDs
+     */
+    public function findLinkedUsers($taskId)
+    {
+        $queryBuilder = $this->findOneById($taskId);
+        $result = [];
+        $result[] = $queryBuilder['author_id'];
+        $result[] = $queryBuilder['user_id'];
+
+        return $result;
+    }
+
+
+    /**
+     * Check if user is author of a tas or is assigned to it.
+     *
+     * @param int $user User ID
+     * @param int $task Task ID
+     * @return bool
+     */
+    public function checkIfUserHasTask($user, $task)
+    {
+        $linkedUsersIds = $this->findLinkedUsers($task);
+
+        if (in_array($user, $linkedUsersIds)) return true;
+        return false;
+    }
+
+    /**
+     * Gets all dates for the current week
+     *
+     * @return array
+     */
+    function getCurrentWeekDates()
+    {
+        if (date('D') != 'Mon') {
+            $startdate = date('Y-m-d', strtotime('last Monday'));
+        } else {
+            $startdate = date('Y-m-d');
+        }
+
+        //always next saturday
+        if (date('D') != 'Sat') {
+            $enddate = date('Y-m-d', strtotime('next Saturday'));
+        } else {
+            $enddate = date('Y-m-d');
+        }
+
+        $DateArray = array();
+        $timestamp = strtotime($startdate);
+        while ($startdate <= $enddate) {
+            $startdate = date('Y-m-d', $timestamp);
+            $DateArray[] = $startdate;
+            $timestamp = strtotime('+1 days', strtotime($startdate));
+        }
+        return $DateArray;
     }
 }

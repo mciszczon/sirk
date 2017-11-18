@@ -4,10 +4,8 @@
  */
 namespace Form;
 
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+use Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -18,8 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Validator\Constraints as CustomAssert;
 
 /**
- * Class UserType.
- *
+ * Class RegisterType
  * @package Form
  */
 class RegisterType extends AbstractType
@@ -94,7 +91,7 @@ class RegisterType extends AbstractType
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => true,
                 'first_options' => array('label' => 'label.password'),
-                'second_options' => array('label' => 'label.repeat.password'),
+                'second_options' => array('label' => 'label.repeat_password'),
                 'constraints' => [
                     new Assert\NotBlank([
                         'groups' => ['user-default'],
@@ -133,8 +130,10 @@ class RegisterType extends AbstractType
     }
 
     /**
-     * @param $userRepository
-     * @return array
+     * Prepare all user roles for choice.
+     *
+     * @param $userRepository UserRepository
+     * @return array Array of roles
      */
     protected function prepareRolesForChoices($userRepository)
     {

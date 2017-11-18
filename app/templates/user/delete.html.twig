@@ -1,6 +1,6 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ 'title.user_delete'|trans({'%id%': user.id}) }}{% endblock %}
+{% block title %}{{ 'title.user_delete'|trans }}{% endblock %}
 
 {% block content %}
     <section class="site-main section">
@@ -9,8 +9,8 @@
         <div class="pure-g pure-g-wide">
             <div class="pure-u-1">
                 <h2 class="header-icon">
-                    <span class="icon icon-user" aria-hidden="true"></span>
-                    <span><h2>{{ 'title.user_edit'|trans({'%id%': user.id}) }}</h2></span>
+                    <span class="icon icon-remove-user" aria-hidden="true"></span>
+                    {{ 'title.user_delete'|trans }}
                 </h2>
 
                 <div class="pure-g panels">
@@ -22,10 +22,10 @@
                             <div class="panel-content">
                                 <div class="panel-head">
                                     <h3 class="panel-title">{{ user.login }}</h3>
-                                    <p class="meta">@{{ user.login }}</p>
+                                    <p class="meta">ID {{ user.id }}</p>
                                 </div>
                                 <div class="panel-content">
-                                    <p>{{ 'message.delete_item'|trans }} <strong>{{ user.login }}</strong></p>
+                                    <p>{{ 'message.delete_user'|trans }} <strong>{{ user.login }}</strong>?</p>
                                     {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked', 'id': 'delete' }, action: url('user_delete', {'id': user.id}) }) }}
                                     {{ form_widget(form) }}
                                     {{ form_end(form) }}
@@ -33,9 +33,9 @@
                                 <div class="panel-foot">
                                     <ul class="controls">
                                         <li>
-                                            <button form="delete" title="{{ 'action.save'|trans }}">
+                                            <button form="delete" title="{{ 'button.delete'|trans }}" class="delete">
                                                 <span class="icon icon-remove-user" aria-hidden="true"></span>
-                                                <span>{{ 'button.remove'|trans }}</span>
+                                                <span>{{ 'button.delete'|trans }}</span>
                                             </button>
                                         </li>
                                         <li>

@@ -1,0 +1,80 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.message_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-message" aria-hidden="true"></span>
+                    <span>{{ 'title.message_list'|trans }}</span>
+                </h3>
+
+                <div class="pure-g panels task-view">
+                    <a class="pure-u panel panel-primary hoverable" href="{{ url('message_add', { 'project_id': project.id }) }}">
+                        <div class="panel-body panel-content">
+                            <h4 class="panel-title">
+                                <span class="icon icon-new-message" aria-hidden="true"></span> {{ 'label.add_message'|trans }}
+                            </h4>
+                        </div>
+                    </a>
+                </div>
+
+                {% if paginator.data|length %}
+                    <div class="pure-g panels task-view">
+                        {% for row in paginator.data %}
+                            <div class="pure-u panel">
+                                <div class="panel-body">
+                                    <div class="panel-head">
+                                        <h4 class="panel-title">
+                                            <img class="task-assignment" src="{{ asset('img/profile.png') }}" alt="{{ row.user_id }}" style="width: 60px; height: 60px;">
+                                            <span><a href="{{ url('user_view', { 'id': row.user_id }) }}">{{ row.login }}</a></span>
+                                        </h4>
+                                        <div class="panel-meta">
+                                            <span>{{ 'label.date_posted'|trans }} {{ row.date|time_diff }}</span>
+                                            {% if user_id == row.user_id or is_granted('ROLE_ADMIN')%}
+                                                <span>
+                                                    <a href="{{ url('message_edit', { 'id': row.id, 'project_id': project.id }) }}">
+                                                        <span class="icon icon-edit"></span>
+                                                        {{ 'label.edit'|trans }}
+                                                    </a>
+                                                </span>
+                                            {% endif %}
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <span>
+                                                    <a href="{{ url('message_delete', { 'id': row.id, 'project_id': project.id }) }}">
+                                                        <span class="icon icon-trash"></span>
+                                                        {{ 'label.delete'|trans }}
+                                                    </a>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="panel-content">
+                                        {{ row.content }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>{{ 'message.no_records_found'|trans }}</p>
+                {% endif %}
+
+                {% include 'default/_paginator.html.twig' with {
+                paginator: paginator,
+                route_name: 'message_index_paginated',
+                } %}
+
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

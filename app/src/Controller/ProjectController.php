@@ -1,27 +1,25 @@
 <?php
 /**
- * Bookmark controller.
- *
- * @copyright (c) 2016 Tomasz Chojna
- * @link http://epi.chojna.info.pl
+ * Project controller.
  */
 namespace Controller;
 
+use Repository\FileRepository;
+use Repository\MessageRepository;
 use Repository\ProjectRepository;
+use Repository\TaskRepository;
 use Repository\UserRepository;
 use Silex\Application;
-use Silex\Api\ControllerProviderInterface;
 use Form\ProjectType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
- * Class HelloController.
- *
+ * Class ProjectController
  * @package Controller
  */
-class ProjectController implements ControllerProviderInterface
+class ProjectController extends BaseController
 {
     /**
      * Routing settings.
@@ -62,31 +60,62 @@ class ProjectController implements ControllerProviderInterface
      *
      * @return string Response
      */
-    public function indexAction(Application $app, $page = 1)
+    public function indexAction(Application $app)
     {
+
         $projectRepository = new ProjectRepository($app['db']);
+        $currentUserId = $this->getUserId($app);
+
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app['twig']->render(
+                'project/index.html.twig',
+                [
+                    'projects' => $projectRepository->findAllForUser($currentUserId),
+                ]
+            );
+        }
 
         return $app['twig']->render(
             'project/index.html.twig',
-            ['paginator' => $projectRepository->findAllPaginated($page)]
+            [
+                'projects' => $projectRepository->findAll(),
+            ]
         );
     }
 
     /**
+     * View action.
      *
+     * @param \Silex\Application $app Silex application
+     * @param int $id Project ID
      *
-     * @param Application $app
-     * @param int $id
-     * @return mixed
+     * @return string Response
      */
     public function viewAction(Application $app, $id)
     {
         $projectRepository = new ProjectRepository($app['db']);
 
+        $currentUserId = $this->getUserId($app);
+        if (!$projectRepository->checkIfUserHasProject($currentUserId, $id)) {
+            if (!$this->checkIfAdmin($app, $currentUserId)) {
+                return $app->redirect($app['url_generator']->generate('project_index'));
+            }
+        }
+
+        $taskRepository = new TaskRepository($app['db']);
+        $messageRepository = new MessageRepository($app['db']);
+        $fileRepository = new FileRepository($app['db']);
+        $now = new \DateTime('now');
+
         return $app['twig']->render(
             'project/view.html.twig',
             [
                 'project' => $projectRepository->findOneById($id),
+                'tasks' => $taskRepository->findLinkedTasksNotDone($id),
+                'messages' => $messageRepository->findLastMessagesForProject($id),
+                'files' => $fileRepository->findLastFilesForProject($id),
+                'now' => $now->format('Y-m-d'),
+                'week' => $taskRepository->getCurrentWeekDates(),
             ]
         );
     }
@@ -99,6 +128,48 @@ class ProjectController implements ControllerProviderInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP Response
      */
+    public function addAction(Application $app, Request $request)
+    {
+        $currentUserId = $this->getUserId($app);
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app->redirect($app['url_generator']->generate('project_index'));
+        }
+
+        $project = [];
+
+        $form = $app['form.factory']->createBuilder(
+            ProjectType::class,
+            $project,
+            [
+                'user_repository' => new UserRepository($app['db']),
+                'project_repository' => new ProjectRepository($app['db']),
+            ]
+        )->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $projectRepository = new ProjectRepository($app['db']);
+            $projectRepository->save($form->getData());
+
+            $app['session']->getFlashBag()->add(
+                'messages',
+                [
+                    'type' => 'success',
+                    'message' => 'message.element_successfully_added',
+                ]
+            );
+
+            return $app->redirect($app['url_generator']->generate('project_index'), 301);
+        }
+
+        return $app['twig']->render(
+            'project/add.html.twig',
+            [
+                'project' => $project,
+                'form' => $form->createView(),
+            ]
+        );
+    }
 
     /**
      * Edit action.
@@ -113,6 +184,12 @@ class ProjectController implements ControllerProviderInterface
     public function editAction(Application $app, $id, Request $request)
     {
         $projectRepository = new ProjectRepository($app['db']);
+
+        $currentUserId = $this->getUserId($app);
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app->redirect($app['url_generator']->generate('project_index'));
+        }
+
         $project = $projectRepository->findOneById($id);
 
         if (!$project) {
@@ -132,6 +209,8 @@ class ProjectController implements ControllerProviderInterface
             $project,
             [
                 'user_repository' => new UserRepository($app['db']),
+                'project_repository' => new ProjectRepository($app['db']),
+                'project_id' => $project['id'],
             ]
         )->getForm();
         $form->handleRequest($request);
@@ -147,7 +226,7 @@ class ProjectController implements ControllerProviderInterface
                 ]
             );
 
-            //return $app->redirect($app['url_generator']->generate('project_index'), 301);
+            return $app->redirect($app['url_generator']->generate('project_view', ['id' => $id]), 301);
         }
 
         return $app['twig']->render(
@@ -171,6 +250,12 @@ class ProjectController implements ControllerProviderInterface
     public function deleteAction(Application $app, $id, Request $request)
     {
         $projectRepository = new ProjectRepository($app['db']);
+
+        $currentUserId = $this->getUserId($app);
+        if (!$this->checkIfAdmin($app, $currentUserId)) {
+            return $app->redirect($app['url_generator']->generate('project_index'));
+        }
+
         $project = $projectRepository->findOneById($id);
 
         if (!$project) {
@@ -189,6 +274,7 @@ class ProjectController implements ControllerProviderInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $projectRepository->delete($project);
             $app['session']->getFlashBag()->add(
                 'messages',
                 [

@@ -4,6 +4,10 @@ $(document).ready(function() {
     var menu = $('.main-menu-list');
 
     makeMobileMenu(menu, logo);
+
+    $('.close-alert').click(function(){
+        $(this).closest('.section-alert').remove();
+    });
     
     $(window).resize(function() {
         makeMobileMenu(menu, logo);
@@ -32,8 +36,8 @@ function makeMobileMenu(menu, logo) {
     menu.addClass('menu-hidden');
     console.log('Added class once');
 
-    // Check if it is invisivle
-    if (menu.css('display') == 'none') {
+    // Check if it is invisible
+    if (menu.css('display') === 'none') {
         // Bind show/hide behavior to the menu click
         logo.unbind().on('click', function(e) {
             bindMobileMenu(e, menu, logo);

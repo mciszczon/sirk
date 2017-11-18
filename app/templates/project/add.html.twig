@@ -1,19 +1,48 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ 'title.bookmark_add'|trans }}{% endblock %}
+{% block title %}{{ 'title.project_add'|trans }}{% endblock %}
 
 {% form_theme form with ['bootstrap_3_horizontal_layout.html.twig', 'form/form_errors.html.twig'] %}
 
 {% block content %}
-    <h1>{{ 'title.bookmark_add'|trans }}</h1>
-    {{ form_start(form, { method: 'post', action: url('bookmark_add') }) }}
-    {{ form_widget(form) }}
-    <input type="submit" value="{{ 'action.save'|trans }}" class="btn btn-success" />
-    {{ form_end(form) }}
+    <section class="site-main section">
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h2 class="header-icon">
+                    <span class="icon icon-grid" aria-hidden="true"></span>
+                    <span>{{ 'title.project_add'|trans }}</span>
+                </h2>
 
-    <a class="btn btn-default" href="{{ url('bookmark_index') }}">
-        <span class="glyphicon glyphicon-backward"></span>
-        <span>{{ 'label.back'|trans }}</span>
-    </a>
+                <div class="pure-g panels">
+                    <div class="pure-u-1 panel">
+                        <div class="panel-body">
+                            <div class="panel-content">
+                                {{ form_start(form, { method: 'post', attr: { 'id': 'project', 'class': 'form form-stacked' }, action: url('project_add') }) }}
+                                {{ form_widget(form) }}
+                                {{ form_end(form) }}
+                            </div>
+                            <div class="panel-foot">
+                                <ul class="controls">
+                                    <li>
+                                        <button form="project" title="{{ 'button.save'|trans }}">
+                                            <span class="icon icon-check" aria-hidden="true"></span>
+                                            {{ 'button.save'|trans }}
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('project_index') }}">
+                                            <span class="icon icon-cross" aria-hidden="true"></span>
+                                            {{ 'button.cancel'|trans }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
 {% endblock %}

@@ -14,12 +14,6 @@
                 <ul class="main-menu-list">
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <li class="main-menu-item">
-                            <a href="" class="main-menu-link">
-                                <span class="icon icon-home" aria-hidden="true"></span>
-                                <span>{{ 'subpage.dashboard'|trans }}</span>
-                            </a>
-                        </li>
-                        <li class="main-menu-item">
                             <a href="{{ url('project_index') }}" class="main-menu-link">
                                 <span class="icon icon-grid" aria-hidden="true"></span>
                                 <span>{{ 'subpage.projects'|trans }}</span>
@@ -42,14 +36,14 @@
                         <li class="main-menu-item">
                                 <a href="{{ url('auth_logout') }}" class="main-menu-link">
                                     <span class="icon icon-log-out" aria-hidden="true"></span>
-                                    <span>{{ 'auth.logout.label'|trans }}</span>
+                                    <span>{{ 'auth.logout'|trans }}</span>
                                 </a>
                         </li>
                     {% else %}
                         <li class="main-menu-item">
                                 <a href="{{ url('auth_login') }}" class="main-menu-link">
                                     <span class="icon icon-login" aria-hidden="true"></span>
-                                    <span>{{ 'auth.login.label'|trans }}</span>
+                                    <span>{{ 'auth.login'|trans }}</span>
                                 </a>
                         </li>
                     {% endif %}

@@ -1,13 +1,11 @@
 <?php
 /**
- * User repository
+ * Project repository
  */
-
 namespace Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
-use Utils\Paginator;
 
 /**
  * Class UserRepository.
@@ -31,7 +29,7 @@ class ProjectRepository
     protected $db;
 
     /**
-     * TagRepository constructor.
+     * ProjectRepository constructor.
      *
      * @param \Doctrine\DBAL\Connection $db
      */
@@ -41,29 +39,38 @@ class ProjectRepository
     }
 
     /**
-     * Get records paginated.
+     * Find projects that are linked to a user.
      *
-     * @param int $page Current page number
-     *
-     * @return array Result
+     * @param $userId
+     * @return array
      */
-    public function findAllPaginated($page = 1)
+    public function findAllForUser($userId)
     {
-        $countQueryBuilder = $this->queryAll()
-            ->select('COUNT(DISTINCT p.id) AS total_results')
-            ->setMaxResults(1);
+        $chosenProjects = $this->findLinkedProjectsIds($userId);
 
-        $paginator = new Paginator($this->queryAll(), $countQueryBuilder);
-        $paginator->setCurrentPage($page);
-        $paginator->setMaxPerPage(self::NUM_ITEMS);
+        $queryBuilder = $this->queryAll();
+        $queryBuilder->where('p.id IN (:ids)')
+        ->setParameter(':ids', $chosenProjects, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
 
-        return $paginator->getCurrentPageResults();
+        return $queryBuilder->execute()->fetchAll();
     }
 
     /**
-     * Find one record.
+     * Find all projects
      *
-     * @param string $id Element id
+     * @return array
+     */
+    public function findAll()
+    {
+        $queryBuilder = $this->queryAll();
+
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
+     * Find one project.
+     *
+     * @param string $id Project ID
      *
      * @return array|mixed Result
      */
@@ -75,22 +82,6 @@ class ProjectRepository
         $result = $queryBuilder->execute()->fetch();
 
         return $result;
-    }
-
-    /**
-     * Find tags by Ids.
-     *
-     * @param array $ids Tags Ids.
-     *
-     * @return array
-     */
-    public function findById($ids)
-    {
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->where('t.id IN (:ids)')
-            ->setParameter(':ids', $ids, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
-
-        return $queryBuilder->execute()->fetchAll();
     }
 
     /**
@@ -129,11 +120,84 @@ class ProjectRepository
     }
 
     /**
-     * Remove linked tags.
+     * Delete project.
      *
-     * @param int $bookmarkId Bookmark Id
+     * @param array $project Project
+     * @throws DBALException
+     */
+    public function delete($project)
+    {
+        $this->db->beginTransaction();
+
+        try {
+            $this->removeLinkedUsers($project['id']);
+            $this->removeLinkedNotes($project['id']);
+            $this->removeLinkedFiles($project['id']);
+            $this->removeLinkedMessages($project['id']);
+            $this->removeLinkedTasks($project['id']);
+            $this->db->delete('project', ['id' => $project['id']]);
+            $this->db->commit();
+        } catch (DBALException $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Find users that are linked to a project.
      *
-     * @return boolean Result
+     * @param int $projectId ID of a project
+     * @return array Array of users' IDs
+     */
+    public function findLinkedUsers($projectId)
+    {
+        $queryBuilder = $this->queryConnections();
+        $queryBuilder->where('up.project_id = :id')
+            ->setParameter(':id', $projectId, \PDO::PARAM_INT);
+        $connections = $queryBuilder->execute()->fetchAll();
+
+        return isset($connections) ? array_column($connections, 'user_id') : [];
+    }
+
+    /**
+     * Find users linked to a project and fetch them entirely.
+     *
+     * @param int $projectId Project ID
+     * @return array Array of users
+     */
+    public function findLinkedUsersDetails($projectId)
+    {
+        $usersIds = $this->findLinkedUsers($projectId);
+        $userRepository = new UserRepository($this->db);
+
+        $queryBuilder = $userRepository->queryAll()
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $usersIds, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
+
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
+     * Find projects' IDs that user is linked to.
+     *
+     * @param int $userId User ID
+     * @return array Result
+     */
+    public function findLinkedProjectsIds($userId)
+    {
+        $queryBuilder = $this->queryConnections();
+        $queryBuilder->where('up.user_id = :id')
+            ->setParameter(':id', $userId, \PDO::PARAM_INT);
+        $connections = $queryBuilder->execute()->fetchAll();
+
+        return isset($connections) ? array_column($connections, 'project_id') : [];
+    }
+
+    /**
+     * Remove links between users and a project
+     *
+     * @param int $projectId Project ID
+     * @return int Result
      */
     protected function removeLinkedUsers($projectId)
     {
@@ -141,10 +205,54 @@ class ProjectRepository
     }
 
     /**
-     * Add linked tags.
+     * Remove notes for a project.
      *
-     * @param int $bookmarkId Bookmark Id
-     * @param array $tagsIds Tags Ids
+     * @param int $projectId Project ID
+     * @return int Result
+     */
+    protected function removeLinkedNotes($projectId)
+    {
+        return $this->db->delete('note', ['project_id' => $projectId]);
+    }
+
+    /**
+     * Remove files for a project.
+     *
+     * @param int $projectId Project ID
+     * @return int Result
+     */
+    protected function removeLinkedFiles($projectId)
+    {
+        return $this->db->delete('file', ['project_id' => $projectId]);
+    }
+
+    /**
+     * Remove messages for a project.
+     *
+     * @param int $projectId Project ID
+     * @return int Result
+     */
+    protected function removeLinkedMessages($projectId)
+    {
+        return $this->db->delete('message', ['project_id' => $projectId]);
+    }
+
+    /**
+     * Remove tasks for a project.
+     *
+     * @param int $projectId Project ID
+     * @return int Result
+     */
+    protected function removeLinkedTasks($projectId)
+    {
+        return $this->db->delete('task', ['project_id' => $projectId]);
+    }
+
+    /**
+     * Add links between a project and users
+     *
+     * @param int $projectId Project ID
+     * @param array $usersIds Array of user's IDs
      */
     protected function addLinkedUsers($projectId, $usersIds)
     {
@@ -164,6 +272,23 @@ class ProjectRepository
     }
 
     /**
+     * Check if user is linked to a project.
+     *
+     * @param int $user User ID
+     * @param int $project Project ID
+     * @return bool Boolean information
+     */
+    public function checkIfUserHasProject($user, $project)
+    {
+        $linkedUsersIds = $this->findLinkedUsers($project);
+
+        if (in_array($user, $linkedUsersIds)) return true;
+        return false;
+    }
+
+    /**
+     * Query all projects.
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     public function queryAll()
@@ -173,6 +298,11 @@ class ProjectRepository
         return $queryBuilder->select('p.id', 'p.name', 'p.subtitle', 'p.description')->from('project', 'p');
     }
 
+    /**
+     * Query connections between projects and users
+     *
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
     protected function queryConnections()
     {
         $queryBuilder = $this->db->createQueryBuilder();

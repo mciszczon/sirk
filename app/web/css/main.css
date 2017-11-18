@@ -3760,6 +3760,17 @@ ul.panels, ol.panels {
   .panels .panel-primary .panel-body {
     background: #1e87f0;
     color: #f8f8f8; }
+  .panels .panel-muted .panel-title {
+    color: #666;
+    text-decoration: line-through;
+  }
+  .panels .panel-muted .panel-body {
+    opacity: 0.5;
+    transition: all .2s;
+  }
+  .panels .panel-muted .panel-body:hover {
+    opacity: 1;
+  }
   .panels .panel-centered .panel-body {
     display: flex;
     flex-direction: column;
@@ -4425,5 +4436,55 @@ ul.panels, ol.panels {
   h2,
   h3 {
     page-break-after: avoid; } }
+
+input[type='checkbox'] {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+
+input[type='checkbox'] + label {
+  display: inline-block;
+  margin-right: 2rem;
+}
+
+.checkbox {
+  display: inline-block;
+  margin-right: 2rem;
+}
+
+.section-alert {
+  color: white;
+}
+
+.section-alert button {
+  background: white;
+  color: black;
+  border: none;
+  box-shadow: none;
+  line-height: 1;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.section-alert-success {
+  background: #3DBA7D;
+}
+
+.section-alert-warning {
+  background: #FF5A5F;
+}
+
+.pure-button-delete {
+  background: #FF5A5F;
+  color: white;
+}
+
+.delete {
+  color: #FF5A5F !important;
+}
+
+.success {
+  color: #3DBA7D !important;
+}
 
 /*# sourceMappingURL=main.css.map */

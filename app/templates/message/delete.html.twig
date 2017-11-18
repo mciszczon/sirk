@@ -1,0 +1,64 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.message_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-message" aria-hidden="true"></span>
+                    <span>{{ 'title.message_delete'|trans }}</span>
+                </h3>
+
+                <p>{{ 'message.delete_message'|trans }}</p>
+                {{ form_start(form, { method: 'post', attr: { 'id': 'message' }, action: url('message_delete', {'id': message.id, 'project_id': project.id }) }) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+
+                <!-- Panels -->
+                <div class="pure-g panels task-view">
+                    <div class="pure-u panel">
+                        <div class="panel-body">
+                            <div class="panel-head">
+                                <h4 class="panel-title">
+                                    <img class="task-assignment" src="{{ asset('img/profile.png') }}" alt="{{ message.user_id }}" style="width: 60px; height: 60px;">
+                                    <span><a href="{{ url('user_view', { 'id': message.user_id }) }}">{{ message.login }}</a></span>
+                                </h4>
+                                <div class="panel-meta">
+                                    <span>{{ 'label.date_posted'|trans }} {{ message.date|time_diff }}</span>
+                                </div>
+                            </div>
+                            <div class="panel-content">
+                                {{ message.content }}
+                            </div>
+                            <div class="panel-foot">
+                                <ul class="controls">
+                                    <li>
+                                        <button form="message" class="delete">
+                                            <span class="icon icon-trash" aria-hidden="true"></span>
+                                            <span>{{ 'button.delete'|trans }}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('message_index', { 'project_id': project.id }) }}">
+                                            <span class="icon icon-cross" aria-hidden="true"></span>
+                                            <span>{{ 'button.cancel'|trans }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

@@ -13,17 +13,17 @@
                     <span>{{ 'title.index'|trans }}</span>
                 </h2>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <p>{{ 'message.hello' }}</p>
+                    <p>{{ 'message.hello'|trans }}</p>
                 {% else %}
                     <p>{{ 'message.not_logged'|trans }}</p>
                     <div class="pure-button-group" role="group">
                         <a href="{{ url('auth_login') }}" class="pure-button pure-button-primary">
                             <span class="icon icon-login" aria-hidden="true"></span>
-                            {{ 'message.login'|trans }}
+                            {{ 'auth.login'|trans }}
                         </a>
                         <a href="{{ url('auth_register') }}" class="pure-button">
                             <span class="icon icon-add-user" aria-hidden="true"></span>
-                            {{ 'message.register'|trans }}
+                            {{ 'auth.register'|trans }}
                         </a>
                     </div>
                 {% endif %}

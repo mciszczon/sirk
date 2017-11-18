@@ -1,6 +1,6 @@
 <?php
 /**
- * Unique Tag constraint.
+ * Unique login constraint.
  */
 namespace Validator\Constraints;
 

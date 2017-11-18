@@ -10,33 +10,45 @@
                 <ul class="project-menu-list">
                     <li class="project-menu-item">
                         <a href="{{ url('project_view', { 'id': project.id }) }}" class="project-menu-link">
+                            <span class="icon icon-grid"></span>
                             {{ 'subpage.overview'|trans }}
                         </a>
                     </li>
                     <li class="project-menu-item">
                         <a href="{{ url('task_index', { 'project_id': project.id }) }}" class="project-menu-link">
+                            <span class="icon icon-list"></span>
                             {{ 'subpage.tasks'|trans }}
                         </a>
                     </li>
                     <li class="project-menu-item">
-                        <a href="" class="project-menu-link">
+                        <a href="{{ url('file_index', { 'project_id': project.id }) }}" class="project-menu-link">
+                            <span class="icon icon-documents"></span>
                             {{ 'subpage.files'|trans }}
                         </a>
                     </li>
                     <li class="project-menu-item">
-                        <a href="" class="project-menu-link">
+                        <a href="{{ url('note_index', { 'project_id': project.id }) }}" class="project-menu-link">
+                            <span class="icon icon-text-document"></span>
                             {{ 'subpage.notes'|trans }}
                         </a>
                     </li>
                     <li class="project-menu-item">
-                        <a href="" class="project-menu-link">
+                        <a href="{{ url('message_index', { 'project_id': project.id }) }}" class="project-menu-link">
+                            <span class="icon icon-message"></span>
                             {{ 'subpage.discussion'|trans }}
                         </a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="project-menu-item">
                             <a href="{{ url('project_edit', { 'id': project.id }) }}" class="project-menu-link">
+                                <span class="icon icon-cog"></span>
                                 {{ 'subpage.settings'|trans }}
+                            </a>
+                        </li>
+                        <li class="project-menu-item">
+                            <a href="{{ url('project_delete', { 'id': project.id }) }}" class="project-menu-link">
+                                <span class="icon icon-trash"></span>
+                                {{ 'subpage.delete'|trans }}
                             </a>
                         </li>
                     {% endif %}

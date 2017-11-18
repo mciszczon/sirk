@@ -1,1 +1,6 @@
 .idea/
+vendor/
+composer.lock
+app/vendor/
+app/composer.lock
+app/composer.phar

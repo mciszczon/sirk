@@ -11,16 +11,21 @@ use Repository\UserRepository;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Class AuthController
  *
  * @package Controller
  */
-class AuthController implements ControllerProviderInterface
+class AuthController extends BaseController
 {
     /**
-     * {@inheritdoc}
+     * Routing settings.
+     *
+     * @param \Silex\Application $app Silex application
+     *
+     * @return \Silex\ControllerCollection Result
      */
     public function connect(Application $app)
     {
@@ -47,6 +52,12 @@ class AuthController implements ControllerProviderInterface
      */
     public function loginAction(Application $app, Request $request)
     {
+        $currentUserId = $this->getUserId($app);
+
+        if ($currentUserId !== '') {
+            return $app->redirect($app['url_generator']->generate('project_index'));
+        }
+
         $user = ['login' => $app['session']->get('_security.last_username')];
         $form = $app['form.factory']->createBuilder(LoginType::class, $user)->getForm();
 
@@ -94,6 +105,14 @@ class AuthController implements ControllerProviderInterface
                 ]
             );
 
+            $token = new UsernamePasswordToken(
+                $data['login'],
+                $data['password'],
+                'main',
+                array('ROLE_USER')
+            );
+            $app['security.token_storage']->setToken($token);
+            $app['session']->set('main', serialize($token));
             $app['session']->save();
 
             return $app->redirect($app['url_generator']->generate('homepage'), 301);

@@ -1,10 +1,11 @@
 <?php
 /**
- * Tag type.
+ * Task type.
  */
 namespace Form;
 
-use Doctrine\DBAL\Types\DateType;
+use Repository\PriorityRepository;
+use Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -14,17 +15,14 @@ use Symfony\Component\Form\Extension\Core\Type\DateType as SymfonyDateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-use Validator\Constraints as CustomAssert;
-use Repository\PriorityRepository;
+use Symfony\Component\Form\CallbackTransformer;
 
 /**
- * Class TagType.
- *
+ * Class TaskType
  * @package Form
  */
 class TaskType extends AbstractType
 {
-
     /**
      * {@inheritdoc}
      */
@@ -38,6 +36,7 @@ class TaskType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'max_length' => 128,
+                    'class' => 'pure-u-1',
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
@@ -59,6 +58,9 @@ class TaskType extends AbstractType
             [
                 'label' => 'label.description',
                 'required' => false,
+                'attr' => [
+                    'class' => 'pure-u-1',
+                ],
             ]
         );
         $builder->add(
@@ -72,6 +74,11 @@ class TaskType extends AbstractType
                     new Assert\NotBlank(
                         ['groups' => ['task-default'],]
                     ),
+                    new Assert\Date(
+                        [
+                            'groups' => ['task-default']
+                        ]
+                    ),
                 ],
             ]
         );
@@ -81,6 +88,9 @@ class TaskType extends AbstractType
             [
                 'label' => 'label.priority',
                 'required' => true,
+                'attr' => [
+                    'class' => 'pure-u-1',
+                ],
                 'choices' => $this->preparePrioritiesForChoices($options['priorities_repository']),
                 'choice_translation_domain' => 'messages',
                 'data' => 4,
@@ -95,10 +105,20 @@ class TaskType extends AbstractType
             'user_id',
             ChoiceType::class,
             [
-                'label' => 'label.users',
+                'label' => 'label.task_user',
                 'required' => false,
+                'attr' => [
+                    'class' => 'pure-u-1',
+                ],
                 'choice_translation_domain' => 'messages',
-                'choices' => $this->prepareUsersForChoices($options['user_repository']),
+                'choices' => $this->prepareUsersForChoices($options['project_repository'], $options['project_id']),
+            ]
+        );
+        $builder->add(
+            'author_id',
+            HiddenType::class,
+            [
+                'data' => $options['current_user_id']
             ]
         );
         $builder->add(
@@ -115,6 +135,16 @@ class TaskType extends AbstractType
                 'data' => 0,
             ]
         );
+
+        $builder->get('date')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($date) {
+                    return isset($date) ? \DateTime::createFromFormat("Y-m-d", $date) : null;
+                },
+                function ($date) {
+                    return isset($date) ? date_format($date, 'Y-m-d') : '';
+                }
+            ));
     }
 
     /**
@@ -130,6 +160,7 @@ class TaskType extends AbstractType
                 'priorities_repository' => null,
                 'user_repository' => null,
                 'project_id' => null,
+                'current_user_id' => null,
             ]
         );
     }
@@ -142,7 +173,12 @@ class TaskType extends AbstractType
         return 'task_type';
     }
 
-
+    /**
+     * Prepare priorities for choice
+     *
+     * @param $priorityRepository PriorityRepository
+     * @return array Array of priorities
+     */
     protected function preparePrioritiesForChoices($priorityRepository)
     {
         $priorities = $priorityRepository->findAll();
@@ -172,12 +208,15 @@ class TaskType extends AbstractType
     }
 
     /**
-     * @param $userRepository
-     * @return array
+     * Prepare all users for choice
+     *
+     * @param $projectRepository
+     * @param int $projectId Project ID
+     * @return array Array of users
      */
-    protected function prepareUsersForChoices($userRepository)
+    protected function prepareUsersForChoices($projectRepository, $projectId)
     {
-        $users = $userRepository->findAll();
+        $users = $projectRepository->findLinkedUsersDetails($projectId);
         $choices = [];
 
         foreach ($users as $user) {

@@ -1,0 +1,74 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.file_delete'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-text-document" aria-hidden="true"></span>
+                    <span>{{ 'title.file_delete'|trans }}</span>
+                </h3>
+
+                <p>{{ 'message.delete_file'|trans }}</p>
+                {{ form_start(form, { method: 'post', attr: { 'id': 'file', 'class': 'pure-form pure-form-stacked form' }, action: url('file_delete', { 'id': file.id, 'project_id': project.id }) }) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+
+                {% if file %}
+                    <!-- Panels -->
+                    <div class="pure-g panels task-view">
+                        <div class="pure-u panel">
+                            <div class="panel-body">
+                                <div class="panel-head">
+                                    <h4 class="panel-title">
+                                        <span class="icon icon-document" aria-hidden="true"></span>
+                                        {{ file.name }}
+                                    </h4>
+                                    <div class="panel-meta">
+                                        <span>{{ file.file }}</span>
+                                        <span>{{ 'message.added_by'|trans }}: <a href="{{ url('user_view', { 'id': file.user_id }) }}">{{ file.login }}</a></span>
+                                    </div>
+                                </div>
+                                <div class="panel-content">
+                                    <h5>{{ 'label.description'|trans }}</h5>
+                                    {% if file.description is not null %}
+                                        <p>{{ file.description|nl2br }}</p>
+                                    {% else %}
+                                        <p class="text-meta">{{ 'message.no_description'|trans }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="panel-foot">
+                                    <ul class="controls">
+                                        <li>
+                                            <button form="file" class="delete">
+                                                <span class="icon icon-trash" aria-hidden="true"></span>
+                                                <span>{{ 'button.delete'|trans }}</span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('file_view', { 'id': file.id, 'project_id': project.id }) }}">
+                                                <span class="icon icon-cross" aria-hidden="true"></span>
+                                                <span>{{ 'button.cancel'|trans }}</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>{{ 'message.record_not_found'|trans }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

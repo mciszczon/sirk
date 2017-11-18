@@ -1,0 +1,52 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ 'title.note_add'|trans }}{% endblock %}
+
+{% form_theme form with ['form/form_errors.html.twig'] %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-add-to-list" aria-hidden="true"></span>
+                    <span>{{ 'title.note_add'|trans }}</span>
+                </h3>
+
+                <!-- Panels -->
+                <div class="pure-g panels task-view">
+                    <div class="pure-u panel">
+                        <div class="panel-body">
+                            <div class="panel-content">
+                                {{ form_start(form, { method: 'post', attr: { 'id': 'note', 'class': 'pure-form pure-form-stacked form' }, action: url('note_add', { 'project_id': project.id }) }) }}
+                                {{ form_widget(form) }}
+                                {{ form_end(form) }}
+                            </div>
+                            <div class="panel-foot">
+                                <ul class="controls">
+                                    <li>
+                                        <button form="note" class="success">
+                                            <span class="icon icon-check" aria-hidden="true"></span>
+                                            <span>{{ 'button.save'|trans }}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('note_index', { 'project_id': project.id }) }}">
+                                            <span class="icon icon-cross" aria-hidden="true"></span>
+                                            <span>{{ 'button.cancel'|trans }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

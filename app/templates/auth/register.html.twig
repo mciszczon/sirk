@@ -1,30 +1,39 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ 'title.auth_register'|trans }}{% endblock %}
+{% block title %}{{ 'auth.register'|trans }}{% endblock %}
 
 {% block content %}
+
+    {% if error is defined and error|length %}
+        {% include 'default/_single_alert_message.html.twig' with {
+        is_single_message: true,
+        is_dismissible: false,
+        type: 'danger',
+        message: error,
+        } %}
+    {% endif %}
+
     <section class="site-main section">
         <div class="pure-g pure-g-wide">
-            <div class="pure-u-1">
-                <h1>{{ 'title.auth_register'|trans }}</h1>
+            <div class="pure-u-1 pure-u-md-1-2">
+                <h2>{{ 'auth.register'|trans }}</h2>
 
-                {% if error is defined and error|length %}
-                    {% include 'default/_single_alert_message.html.twig' with {
-                    is_single_message: true,
-                    is_dismissible: false,
-                    type: 'danger',
-                    message: error,
-                    } %}
-                {% endif %}
+                {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked margin-top' }, action: path('auth_register') }) }}
+                {{ form_widget(form) }}
+                <button type="submit" title="{{ 'auth.register'|trans }}" class="pure-button pure-button-primary margin-top">
+                    <span class="icon icon-add-user"></span>
+                    {{ 'auth.register'|trans }}
+                </button>
+                {{ form_end(form) }}
 
-                <div>
-                    {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked' }, action: path('auth_register') }) }}
-                    {{ form_widget(form) }}
-                    <button type="submit" title="{{ 'action.register'|trans }}" class="pure-button pure-button-primary">
-                        {{ 'action.register'|trans }}
-                    </button>
-                    {{ form_end(form) }}
-                </div>
+            </div>
+            <div class="pure-u-1 pure-u-md-1-2">
+                <h2>{{ 'title.has_account'|trans }}</h2>
+                <p>{{ 'message.login'|trans }}</p>
+                <a class="pure-button" href="{{ url('auth_login') }}">
+                    <span class="icon icon-login"></span>
+                    {{ 'auth.login'|trans }}
+                </a>
             </div>
         </div>
     </section>

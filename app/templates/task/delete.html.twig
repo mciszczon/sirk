@@ -1,6 +1,8 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ 'title.task_delete'|trans({'%id%': task.id}) }}{% endblock %}
+{% block title %}
+    {{ 'title.task_delete'|trans }}
+{% endblock %}
 
 {% block content %}
     {% include('default/_submenu.html.twig') %}
@@ -11,16 +13,27 @@
             <div class="pure-u-1">
 
                 <h3 class="header-icon">
-                    <span class="icon icon-list" aria-hidden="true"></span>
+                    <span class="icon icon-trash" aria-hidden="true"></span>
                     <span>{{ 'title.task_delete'|trans }}</span>
                 </h3>
+
+                <p>{{ 'message.delete_task'|trans }}</p>
+                {{ form_start(form, { method: 'post', attr: { 'id': 'delete' }, action: url('task_delete', {'id': task.id, 'project_id': project.id }) }) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
 
                 <!-- Panels -->
                 <div class="pure-g panels task-view">
                     <div class="pure-u panel">
                         <div class="panel-body">
                             <div class="panel-head">
-                                <span class="priority high">{{ task.priority_id }}</span>
+                                {% if task.priority_id == 1 %}
+                                    <span class="priority low">{{ 'label.priority_low'|trans }}</span>
+                                {% elseif task.priority_id == 2 %}
+                                    <span class="priority medium">{{ 'label.priority_medium'|trans }}</span>
+                                {% elseif task.priority_id == 3 %}
+                                    <span class="priority high">{{ 'label.priority_high'|trans }}</span>
+                                {% endif %}
                                 <h4 class="panel-title">
                                     <span>{{ task.name }}</span>
                                 </h4>
@@ -42,22 +55,23 @@
                                 </div>
                             </div>
                             <div class="panel-content">
-                                <h5>{{ 'title.task_delete'|trans({'%id%': task.id}) }}</h5>
-                                <p>{{ 'message.delete_item'|trans }} <strong>{{ task.name }}</strong></p>
-                                {{ form_start(form, { method: 'post', attr: { 'id': 'delete' }, action: url('task_delete', {'id': task.id, 'project_id': project.id }) }) }}
-                                {{ form_widget(form) }}
-                                {{ form_end(form) }}
+                                <h5>{{ 'title.description'|trans }}</h5>
+                                {%  if task.description %}
+                                    <p>{{ task.description }}</p>
+                                {% else %}
+                                    <p class="text-meta">{{ 'message.no_description'|trans }}</p>
+                                {% endif %}
                             </div>
                             <div class="panel-foot">
                                 <ul class="controls">
                                     <li>
-                                        <button form="delete">
+                                        <button form="delete" class="delete">
                                             <span class="icon icon-trash" aria-hidden="true"></span>
-                                            <span>{{ 'button.remove'|trans }}</span>
+                                            <span>{{ 'button.delete'|trans }}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <a href="{{ url('task_index', { 'project_id': project.id }) }}">
+                                        <a href="{{ url('task_view', { 'id': task.id, 'project_id': project.id }) }}">
                                             <span class="icon icon-cross" aria-hidden="true"></span>
                                             <span>{{ 'button.cancel'|trans }}</span>
                                         </a>

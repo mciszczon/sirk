@@ -1,0 +1,56 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+    {{ 'title.file_list'|trans }}
+{% endblock %}
+
+{% block content %}
+    {% include('default/_submenu.html.twig') %}
+
+    <section class="site-main section">
+
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+
+                <h3 class="header-icon">
+                    <span class="icon icon-documents" aria-hidden="true"></span>
+                    <span>{{ 'title.file_list'|trans }}</span>
+                </h3>
+
+                <div class="pure-g panels task-view">
+                    <a class="pure-u panel panel-primary hoverable" href="{{ url('file_add', { 'project_id': project.id }) }}">
+                        <div class="panel-body panel-content">
+                            <h4 class="panel-title">
+                                <span class="icon icon-upload" aria-hidden="true"></span> {{ 'label.add_file'|trans }}
+                            </h4>
+                        </div>
+                    </a>
+                </div>
+
+                {% if paginator.data|length %}
+                    <div class="pure-g panels panels-4 files">
+                        {% for row in paginator.data %}
+                            <a class="pure-u panel hoverable" href="{{ url('file_view', { 'id': row.id, 'project_id': project.id }) }}">
+                                <div class="panel-body panel-content">
+                                    <span class="icon icon-text-document" aria-hidden="true"></span>
+                                    <h4 class="panel-title">
+                                        {{ row.name }}
+                                    </h4>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>{{ 'message.no_records_found'|trans }}</p>
+                {% endif %}
+
+                {% include 'default/_paginator.html.twig' with {
+                paginator: paginator,
+                route_name: 'file_index_paginated',
+                } %}
+
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

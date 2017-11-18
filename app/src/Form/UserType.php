@@ -1,6 +1,6 @@
 <?php
 /**
- * Tag type.
+ * User type.
  */
 namespace Form;
 
@@ -35,6 +35,7 @@ class UserType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'max_length' => 128,
+                    'class' => 'pure-u-1',
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
@@ -63,6 +64,9 @@ class UserType extends AbstractType
             [
                 'label' => 'label.roles',
                 'required' => true,
+                'attr' => [
+                    'class' => 'pure-u-1',
+                ],
                 'placeholder' => 'label.none',
                 'choices' => $this->prepareRolesForChoices($options['user_repository']),
                 'constraints' => [
@@ -80,6 +84,7 @@ class UserType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'max_length' => 128,
+                    'class' => 'pure-u-1',
                 ],
                 'constraints' => [
                     new Assert\NotBlank(
@@ -92,6 +97,11 @@ class UserType extends AbstractType
                             'max' => 128,
                         ]
                     ),
+                    new Assert\Email(
+                        [
+                            'groups' => ['user-default']
+                        ]
+                    ),
                 ],
             ]
         );
@@ -101,10 +111,10 @@ class UserType extends AbstractType
             [
                 'type' => PasswordType::class,
                 'invalid_message' => 'message.password_not_repeated',
-                'options' => array('attr' => array('class' => 'password-field')),
+                'options' => array('attr' => array('class' => 'password-field pure-u-1')),
                 'required' => true,
                 'first_options' => array('label' => 'label.password'),
-                'second_options' => array('label' => 'label.repeat.password'),
+                'second_options' => array('label' => 'label.repeat_password'),
                 'constraints' => [
                     new Assert\NotBlank([
                         'groups' => ['user-default'],
@@ -143,8 +153,10 @@ class UserType extends AbstractType
     }
 
     /**
-     * @param $userRepository
-     * @return array
+     * Prepare all user roles for choice.
+     *
+     * @param $userRepository \Repository\UserRepository
+     * @return array Array of roles
      */
     protected function prepareRolesForChoices($userRepository)
     {

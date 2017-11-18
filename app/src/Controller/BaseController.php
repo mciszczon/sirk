@@ -23,7 +23,7 @@ abstract class BaseController implements ControllerProviderInterface
      * Get user ID
      *
      * @param \Silex\Application $app Silex application
-     * @return String $userData['id'] User ID
+     * @return string $userData['id'] User ID
      */
 
     public function getUserId(Application $app)
@@ -35,35 +35,17 @@ abstract class BaseController implements ControllerProviderInterface
 
             if ($user instanceof User) {
                 $username = $user->getUsername();
-            } elseif ($user !== null && $user !== 'anon.') {
+            }
+            elseif ($user !== null && $user !== 'anon.') {
                 $username = $user;
+            }
+            elseif ($user === 'anon.') {
+                return '';
             }
             $userRepository = new UserRepository($app['db']);
             $userData = $userRepository->getUserByLogin($username);
             return $userData['id'];
         }
-    }
-
-    /**
-     * Check order options
-     *
-     * @param null $sortOrder
-     * @param null $sortBy
-     * @return array
-     * @internal param Application $app Silex application
-     */
-
-    public function checkOrderOptions($sortOrder = null, $sortBy = null)
-    {
-        $sortOptions = array('id', 'name', 'type', 'priority', 'status');
-        if (!($sortOrder == 'asc' || $sortOrder == 'desc')) {
-            $sortOrder = 'asc';
-        }
-        if (!in_array($sortBy, $sortOptions)) {
-            $sortOrder = null;
-            $sortBy = null;
-        }
-        return array($sortOrder, $sortBy);
     }
 
     /**

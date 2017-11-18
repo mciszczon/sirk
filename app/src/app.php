@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Application
+ */
 use Silex\Application;
 use Silex\Provider\AssetServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -15,12 +17,18 @@ use Silex\Provider\SecurityServiceProvider;
 
 $app = new Application();
 
+$app['config.files_directory'] = __DIR__.'/../web/uploads/files';
+$app['config.download_files_directory'] = '/uploads/files';
+
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new AssetServiceProvider());
 $app->register(new TwigServiceProvider());
 $app->register(new HttpFragmentServiceProvider());
 $app['twig'] = $app->extend('twig', function ($twig, $app) {
     // add custom globals, filters, tags, ...
+    $twig->addGlobal('files_directory', $app['config.files_directory']);
+    $twig->addGlobal('download_files_directory', $app['config.download_files_directory']);
+    $twig->addExtension(new Twig_Extensions_Extension_Date());
 
     return $twig;
 });
@@ -29,7 +37,7 @@ $app->register(new LocaleServiceProvider());
 $app->register(
     new TranslationServiceProvider(),
     [
-        'locale' => 'pl',
+        'locale' => 'en',
         'locale_fallbacks' => array('en'),
     ]
 );
@@ -50,7 +58,7 @@ $app->register(
             'driver'    => 'pdo_mysql',
             'host'      => 'localhost',
             'dbname'    => 'mydb',
-            'user'      => 'mciszczon',
+            'user'      => 'root',
             'password'  => '',
             'charset'   => 'utf8',
             'driverOptions' => array(
@@ -62,7 +70,6 @@ $app->register(
 
 $app->register(new FormServiceProvider());
 $app->register(new ValidatorServiceProvider());
-
 $app->register(new SessionServiceProvider());
 
 $app->register(
@@ -94,9 +101,14 @@ $app->register(
         ],
         'security.access_rules' => [
             ['^/auth.+$', 'IS_AUTHENTICATED_ANONYMOUSLY'],
-            ['^/(.+edit.*)|(.+delete.*)|(.+add.*)$', 'ROLE_ADMIN'],
+            ['^/user/[0-9]*/add.*$', 'ROLE_ADMIN'],
+            ['^/user/[0-9]*/edit.*$', 'ROLE_ADMIN'],
+            ['^/user/[0-9]*/delete.+$', 'ROLE_ADMIN'],
             ['^/user/.+$', 'ROLE_USER'],
-            ['^/project/.+$', 'ROLE_USER'],
+            ['^/project/[0-9]*/add.*$', 'ROLE_ADMIN'],
+            ['^/project/[0-9]*/edit.*$', 'ROLE_ADMIN'],
+            ['^/project/[0-9]*/delete.+$', 'ROLE_ADMIN'],
+            ['^/project.*$', 'ROLE_USER'],
             ['^/.+$', 'ROLE_ADMIN'],
         ],
         'security.role_hierarchy' => [

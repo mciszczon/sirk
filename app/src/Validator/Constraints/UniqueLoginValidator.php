@@ -1,6 +1,6 @@
 <?php
 /**
- * Unique Tag validator.
+ * Unique login validator.
  */
 namespace Validator\Constraints;
 
@@ -14,8 +14,12 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class UniqueLoginValidator extends ConstraintValidator
 {
+
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $value Value
+     * @param Constraint $constraint Constraint
      */
     public function validate($value, Constraint $constraint)
     {

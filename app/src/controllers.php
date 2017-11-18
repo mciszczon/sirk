@@ -1,33 +1,28 @@
 <?php
-
+/**
+ * Controllers configuration
+ */
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Controller\HelloController;
-use Controller\BookmarkController;
-use Controller\TagController;
+use Controller\IndexController;
 use Controller\AuthController;
 use Controller\UserController;
 use Controller\ProjectController;
 use Controller\TaskController;
+use Controller\MessageController;
+use Controller\NoteController;
+use Controller\FileController;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
-$app->get('/', function () use ($app) {
-    return $app['twig']->render('index.html.twig', array());
-})
-    ->bind('homepage')
-;
-
-$app->mount('/hello', new HelloController());
-$app->mount('/bookmark', new BookmarkController());
-$app->mount('/tag', new TagController());
+$app->mount('/', new IndexController());
 $app->mount('/user', new UserController());
 $app->mount('/project', new ProjectController());
 $app->mount('/auth', new AuthController());
 $app->mount('/project/{project_id}/task', new TaskController());
+$app->mount('/project/{project_id}/message', new MessageController());
+$app->mount('/project/{project_id}/note', new NoteController());
+$app->mount('/project/{project_id}/file', new FileController());
 
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     if ($app['debug']) {

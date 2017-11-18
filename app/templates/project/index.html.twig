@@ -18,17 +18,17 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <ul class="pure-g panels projects">
                         <li class="pure-u panel panel-primary panel-centered panel-control hoverable">
-                            <a class="panel-body panel-content" href="">
+                            <a class="panel-body panel-content" href="{{ url('project_add') }}">
                                 <span class="icon icon-add-to-list" aria-hidden="true"></span>
-                                <span>Add project</span>
+                                <span>{{ 'label.add_project'|trans }}</span>
                             </a>
                         </li>
                     </ul>
                 {% endif %}
 
-                {% if paginator.data|length %}
+                {% if projects|length %}
                     <ul class="pure-g panels panels-3 projects">
-                        {% for row in paginator.data %}
+                        {% for row in projects %}
                             <li class="pure-u panel hoverable">
                                 <a class="panel-body" href="{{ url('project_view', { 'id': row.id }) }}">
                                     <div class="panel-head">
@@ -36,17 +36,16 @@
                                         <span class="panel-meta">{{ row.subtitle }}</span>
                                     </div>
                                     <div class="panel-content">
-                                        <p>{{ row.description }}</p>
+                                        {% if row.description %}
+                                            <p>{{ row.description }}</p>
+                                        {% else %}
+                                            <p class="text-meta">{{ 'message.no_description'|trans }}</p>
+                                        {% endif %}
                                     </div>
                                 </a>
                             </li>
                         {% endfor %}
                     </ul>
-
-                    {% include 'default/_paginator.html.twig' with {
-                    paginator: paginator,
-                    route_name: 'project_index_paginated',
-                    } %}
                 {% endif %}
 
             </div>

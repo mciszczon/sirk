@@ -25,19 +25,18 @@
                                 <div class="panel-content">
                                     <div class="panel-head">
                                         <h3 class="panel-title">{{ user.login }}</h3>
-                                        <p class="meta">@{{ user.login }}</p>
+                                        <p class="meta">ID {{ user.id }}</p>
                                     </div>
                                     <div class="panel-content">
-                                        <h4 class="visually-hidden">{{ 'title.profile_general'|trans }}</h4>
                                         <dl class="margin-bottom">
                                             <dt>
                                                 <span class="icon icon-user" aria-hidden="true"></span>
-                                                {{ 'title.login'|trans }}
+                                                {{ 'label.login'|trans }}
                                             </dt>
                                             <dd>{{ user.login }}</dd>
                                             <dt>
                                                 <span class="icon icon-mail" aria-hidden="true"></span>
-                                                {{ 'title.email'|trans }}
+                                                {{ 'label.email'|trans }}
                                             </dt>
                                             <dd>{{ user.email }}</dd>
                                         </dl>
@@ -51,12 +50,14 @@
                                                         <span>{{ 'button.edit'|trans }}</span>
                                                     </a>
                                                 </li>
-                                                <li>
-                                                    <a href="{{ url('user_delete', {'id': user.id }) }}">
-                                                        <span class="icon icon-trash" aria-hidden="true"></span>
-                                                        <span>{{ 'button.delete'|trans }}</span>
-                                                    </a>
-                                                </li>
+                                                {% if user.id != current_user %}
+                                                    <li>
+                                                        <a href="{{ url('user_delete', {'id': user.id }) }}">
+                                                            <span class="icon icon-trash" aria-hidden="true"></span>
+                                                            <span>{{ 'button.delete'|trans }}</span>
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
                                             </ul>
                                         </div>
                                     {% endif %}

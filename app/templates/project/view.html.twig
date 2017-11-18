@@ -8,6 +8,179 @@
     {% include('default/_submenu.html.twig') %}
 
     <section class="site-main section">
+        <!-- Due tasks -->
+        <div class="pure-g pure-g-wide">
+
+            <h2 class="visually-hidden">
+                <span class="icon icon-eye"></span>
+                {{ 'title.project_view'|trans }}
+            </h2>
+
+            <div class="pure-u-1">
+                <h3 class="header-icon">
+                    <span class="icon icon-list" aria-hidden="true"></span>
+                    <span>{{ 'title.due_tasks'|trans }}</span>
+                </h3>
+
+                <!-- Panels -->
+                <div class="pure-g panels panels-2">
+                    <div class="pure-u panel">
+                        <div class="panel-body panel-content">
+                            <h4 class="panel-title">
+                                <span class="icon icon-warning"></span>
+                                {{ 'title.overdue'|trans }}
+                            </h4>
+                            {% if tasks %}
+                                {% set tasks_overdue = 0 %}
+                                <table class="due-tasks due-tasks-in-project">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ 'thead.task'|trans }}</th>
+                                        <th>{{ 'thead.priority'|trans }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for row in tasks %}
+                                            {% if row.date < now %}
+                                                {% set tasks_overdue = 1 %}
+                                                <tr>
+                                                    <td class="due-task-name">
+                                                        <a href="{{ url('task_view', { 'id': row.id, 'project_id': project.id }) }}">{{ row.name }}</a>
+                                                    </td>
+                                                    <td class="due-task-priority">
+                                                        {% if row.priority_id == 1 %}
+                                                            <span class="priority low">{{ 'label.priority_low'|trans }}</span>
+                                                        {% elseif row.priority_id == 2 %}
+                                                            <span class="priority medium">{{ 'label.priority_medium'|trans }}</span>
+                                                        {% elseif row.priority_id == 3 %}
+                                                            <span class="priority high">{{ 'label.priority_high'|trans }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% if tasks_overdue == 0 %}
+                                    <p class="text-meta">{{ 'message.no_tasks_overdue'|trans }}</p>
+                                {% endif %}
+                            {% else %}
+                                <p class="text-meta margin-top">{{ 'message.no_tasks_overdue'|trans }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="pure-u panel">
+                        <div class="panel-body panel-content">
+                            <h4 class="panel-title">{{ 'title.this_week'|trans }}</h4>
+                            {% if tasks %}
+                                {% set tasks_this_week = 0 %}
+                                <table class="due-tasks due-tasks-in-project">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ 'thead.task'|trans }}</th>
+                                        <th>{{ 'thead.priority'|trans }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in tasks %}
+                                        {% if row.date in week and row.date >= now %}
+                                            {% set tasks_this_week = 1 %}
+                                            <tr>
+                                                <td class="due-task-name">
+                                                    <a href="{{ url('task_view', { 'id': row.id, 'project_id': project.id }) }}">{{ row.name }}</a>
+                                                </td>
+                                                <td class="due-task-priority">
+                                                    {% if row.priority_id == 1 %}
+                                                        <span class="priority low">{{ 'label.priority_low'|trans }}</span>
+                                                    {% elseif row.priority_id == 2 %}
+                                                        <span class="priority medium">{{ 'label.priority_medium'|trans }}</span>
+                                                    {% elseif row.priority_id == 3 %}
+                                                        <span class="priority high">{{ 'label.priority_high'|trans }}</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% if tasks_this_week == 0 %}
+                                    <p class="text-meta">{{ 'message.no_tasks_this_week'|trans }}</p>
+                                {% endif %}
+                            {% else %}
+                                <p class="text-meta margin-top">{{ 'message.no_tasks_this_week'|trans }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h3 class="header-icon">
+                    <span class="icon icon-message" aria-hidden="true"></span>
+                    <span>{{ 'title.last_messages'|trans }}</span>
+                </h3>
+
+                {% if messages %}
+                <!-- Single panel -->
+                <div class="pure-g panels activity">
+                    {% for row in messages %}
+                        <div class="pure-u panel">
+                            <div class="panel-body panel-content">
+                                <div class="activity-profile">
+                                    <img src="{{ asset('img/profile.png') }}" alt="{{ row.login }}" class="activity-profile-img">
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-head">
+                                        <h4 class="panel-title"><a href="{{ url('user_view', { 'id': row.user_id }) }}">{{ row.login }}</a></h4>
+                                        <p class="text-meta meta">{{ row.date|time_diff }}</p>
+                                    </div>
+                                    <div>
+                                        <p style="margin-bottom: 0">{{ row.content|nl2br }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <p>{{ 'message.no_messages'|trans }}</p>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- Recent files -->
+        <div class="pure-g pure-g-wide">
+            <div class="pure-u-1">
+                <h3 class="header-icon">
+                    <span class="icon icon-documents" aria-hidden="true"></span>
+                    <span>{{ 'title.last_files'|trans }}</span>
+                </h3>
+
+                {% if files %}
+                    <!-- Single panel -->
+                    <div class="pure-g panels panels-4 files">
+                        {% for row in files %}
+                            <a class="pure-u panel hoverable" href="{{ url('file_view', { 'id': row.id, 'project_id': project.id }) }}">
+                                <div class="panel-body panel-content">
+                                    <span class="icon icon-text-document" aria-hidden="true"></span>
+                                    <h4 class="panel-title">
+                                        {{ row.name }}
+                                    </h4>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>{{ 'message.no_files'|trans }}</p>
+                {% endif %}
+
+            </div>
+        </div>
 
     </section>
 {% endblock %}

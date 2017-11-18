@@ -19,21 +19,211 @@
                 <source>subpage.settings</source>
                 <target>Settings</target>
             </trans-unit>
+            <trans-unit id="subpage.delete">
+                <source>subpage.delete</source>
+                <target>Delete</target>
+            </trans-unit>
             <trans-unit id="subpage.users">
                 <source>subpage.users</source>
                 <target>Users</target>
             </trans-unit>
-
-            <!-- Titles -->
-            <trans-unit id="title.slogan">
-                <source>title.slogan</source>
-                <target>Project management app</target>
+            <trans-unit id="subpage.overview">
+                <source>subpage.overview</source>
+                <target>Overview</target>
+            </trans-unit>
+            <trans-unit id="subpage.tasks">
+                <source>subpage.tasks</source>
+                <target>Tasks</target>
+            </trans-unit>
+            <trans-unit id="subpage.files">
+                <source>subpage.files</source>
+                <target>Files</target>
+            </trans-unit>
+            <trans-unit id="subpage.notes">
+                <source>subpage.notes</source>
+                <target>Notes</target>
+            </trans-unit>
+            <trans-unit id="subpage.discussion">
+                <source>subpage.discussion</source>
+                <target>Discussion</target>
             </trans-unit>
 
-            <!-- Messages -->
-            <trans-unit id="message.turn_javascript_on">
-                <source>message.turn_javascript_on</source>
-                <target>Please, turn on JavaScript to enhance your experience using Sirk app.</target>
+            <!-- Auth -->
+            <trans-unit id="auth.login">
+                <source>auth.login</source>
+                <target>Log in</target>
+            </trans-unit>
+            <trans-unit id="auth.logout">
+                <source>auth.logout</source>
+                <target>Log out</target>
+            </trans-unit>
+            <trans-unit id="auth.register">
+                <source>auth.register</source>
+                <target>Register</target>
+            </trans-unit>
+
+            <!-- Labels -->
+            <trans-unit id="label.login">
+                <source>label.login</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="label.password">
+                <source>label.password</source>
+                <target>Password</target>
+            </trans-unit>
+            <trans-unit id="label.repeat.password">
+                <source>label.repeat_password</source>
+                <target>Repeat password</target>
+            </trans-unit>
+            <trans-unit id="label.roles">
+                <source>label.roles</source>
+                <target>Role</target>
+            </trans-unit>
+            <trans-unit id="label.none">
+                <source>label.none</source>
+                <target>None</target>
+            </trans-unit>
+            <trans-unit id="label.email">
+                <source>label.email</source>
+                <target>E-mail</target>
+            </trans-unit>
+            <trans-unit id="label.thead_title">
+                <source>label.thead_title</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="label.thead_crud">
+                <source>label.thead_crud</source>
+                <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="label.add_user">
+                <source>label.add_user</source>
+                <target>Add a new user</target>
+            </trans-unit>
+            <trans-unit id="label.add_project">
+                <source>label.add_project</source>
+                <target>Add a new project</target>
+            </trans-unit>
+            <trans-unit id="label.add_task">
+                <source>label.add_task</source>
+                <target>Add a new task</target>
+            </trans-unit>
+            <trans-unit id="label.finished_tasks">
+                <source>label.finished_tasks</source>
+                <target>Show finished tasks</target>
+            </trans-unit>
+            <trans-unit id="label.unfinished_tasks">
+                <source>label.unfinished_tasks</source>
+                <target>Show unfinished tasks</target>
+            </trans-unit>
+            <trans-unit id="label.priority_low">
+                <source>label.priority_low</source>
+                <target>Low</target>
+            </trans-unit>
+            <trans-unit id="label.priority_medium">
+                <source>label.priority_medium</source>
+                <target>Medium</target>
+            </trans-unit>
+            <trans-unit id="label.priority_high">
+                <source>label.priority_high</source>
+                <target>High</target>
+            </trans-unit>
+            <trans-unit id="label.name">
+                <source>label.name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="label.subtitle">
+                <source>label.subtitle</source>
+                <target>Subtitle</target>
+            </trans-unit>
+            <trans-unit id="label.description">
+                <source>label.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="label.users">
+                <source>label.users</source>
+                <target>Users assigned to the project</target>
+            </trans-unit>
+            <trans-unit id="label.due_date">
+                <source>label.due_date</source>
+                <target>Due to</target>
+            </trans-unit>
+            <trans-unit id="label.priority">
+                <source>label.priority</source>
+                <target>Priority</target>
+            </trans-unit>
+            <trans-unit id="label.task_user">
+                <source>label.task_user</source>
+                <target>User assigned to the task</target>
+            </trans-unit>
+            <trans-unit id="label.note_add">
+                <source>label.note_add</source>
+                <target>Add a new note</target>
+            </trans-unit>
+            <trans-unit id="label.title">
+                <source>label.title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="label.content">
+                <source>label.content</source>
+                <target>Content</target>
+            </trans-unit>
+            <trans-unit id="label.add_file">
+                <source>label.add_file</source>
+                <target>Add a new file</target>
+            </trans-unit>
+            <trans-unit id="label.add_message">
+                <source>label.add_message</source>
+                <target>Post a new message</target>
+            </trans-unit>
+            <trans-unit id="label.date_posted">
+                <source>label.date_posted</source>
+                <target>Posted</target>
+            </trans-unit>
+            <trans-unit id="label.edit">
+                <source>label.edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="label.delete">
+                <source>label.delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="label.file">
+                <source>label.file</source>
+                <target>File</target>
+            </trans-unit>
+
+            <!-- Buttons -->
+            <trans-unit id="button.view">
+                <source>button.view</source>
+                <target>View</target>
+            </trans-unit>
+            <trans-unit id="button.save">
+                <source>button.save</source>
+                <target>Save</target>
+            </trans-unit>
+            <trans-unit id="button.edit">
+                <source>button.edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="button.delete">
+                <source>button.delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="button.cancel">
+                <source>button.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="button.download">
+                <source>button.download</source>
+                <target>Download</target>
+            </trans-unit>
+            <trans-unit id="button.finish">
+                <source>button.finish</source>
+                <target>Finish</target>
+            </trans-unit>
+            <trans-unit id="button.close">
+                <source>button.close</source>
+                <target>Close</target>
             </trans-unit>
 
             <!-- Forms -->
@@ -49,48 +239,319 @@
                 <source>priority_3</source>
                 <target>High</target>
             </trans-unit>
+            <trans-unit id="ROLE_ADMIN">
+                <source>ROLE_ADMIN</source>
+                <target>Admin</target>
+            </trans-unit>
+            <trans-unit id="ROLE_USER">
+                <source>ROLE_USER</source>
+                <target>User</target>
+            </trans-unit>
 
-            <!-- Rest -->
-            <trans-unit id="title.bookmarks_list">
-                <source>title.bookmarks_list</source>
-                <target>Bookmarks List</target>
+            <!-- Titles -->
+            <trans-unit id="title.slogan">
+                <source>title.slogan</source>
+                <target>Project management</target>
             </trans-unit>
-            <trans-unit id="title.tag_list">
-                <source>title.tag_list</source>
-                <target>Tags List</target>
+            <trans-unit id="title.no_account">
+                <source>title.no_account</source>
+                <target>No account?</target>
             </trans-unit>
-            <trans-unit id="title.bookmark_view">
-                <source>title.bookmark_view</source>
-                <target>View bookmark</target>
+            <trans-unit id="title.has_account">
+                <source>title.has_account</source>
+                <target>Already registered?</target>
             </trans-unit>
-            <trans-unit id="title.tag_view">
-                <source>title.tag_view</source>
-                <target>View tag</target>
+            <trans-unit id="title.index">
+                <source>title.index</source>
+                <target>Index</target>
             </trans-unit>
-            <trans-unit id="message.empty_list">
-                <source>message.empty_list</source>
-                <target>The list is empty!</target>
+            <!-- Titles: Project -->
+            <trans-unit id="title.project_list">
+                <source>title.project_list</source>
+                <target>Projects</target>
             </trans-unit>
-            <trans-unit id="message.bookmark_none">
-                <source>message.bookmark_none</source>
-                <target>No bookmark found!</target>
+            <trans-unit id="title.project_view">
+                <source>title.project_view</source>
+                <target>Project</target>
             </trans-unit>
-            <trans-unit id="message.tag_none">
-                <source>message.tag_none</source>
-                <target>No tag found!</target>
+            <trans-unit id="title.project_add">
+                <source>title.project_add</source>
+                <target>Add a new project</target>
             </trans-unit>
-            <trans-unit id="label.view">
-                <source>label.view</source>
-                <target>View</target>
+            <trans-unit id="title.project_edit">
+                <source>title.project_edit</source>
+                <target>Edit project</target>
             </trans-unit>
-            <trans-unit id="label.back_to_list">
-                <source>label.back_to_list</source>
-                <target>Go back</target>
+            <trans-unit id="title.project_delete">
+                <source>title.project_delete</source>
+                <target>Delete project</target>
             </trans-unit>
-            <trans-unit id="label.add_tag">
-                <source>label.add_tag</source>
-                <target>Add a tag</target>
+            <trans-unit id="title.due_tasks">
+                <source>title.due_tasks</source>
+                <target>Due tasks</target>
             </trans-unit>
+            <trans-unit id="title.overdue">
+                <source>title.overdue</source>
+                <target>Overdue</target>
+            </trans-unit>
+            <trans-unit id="title.this_week">
+                <source>title.this_week</source>
+                <target>This week</target>
+            </trans-unit>
+            <trans-unit id="title.last_messages">
+                <source>title.last_messages</source>
+                <target>Last messages</target>
+            </trans-unit>
+            <trans-unit id="title.last_files">
+                <source>title.last_files</source>
+                <target>Last files</target>
+            </trans-unit>
+            <!-- Titles: Tasks -->
+            <trans-unit id="title.task_list">
+                <source>title.task_list</source>
+                <target>Tasks</target>
+            </trans-unit>
+            <trans-unit id="title.task_view">
+                <source>title.task_view</source>
+                <target>Task view</target>
+            </trans-unit>
+            <trans-unit id="title.task_add">
+                <source>title.task_add</source>
+                <target>Add task</target>
+            </trans-unit>
+            <trans-unit id="title.task_edit">
+                <source>title.task_edit</source>
+                <target>Edit task</target>
+            </trans-unit>
+            <trans-unit id="title.task_finish">
+                <source>title.task_finish</source>
+                <target>Finish task</target>
+            </trans-unit>
+            <trans-unit id="title.task_delete">
+                <source>title.task_delete</source>
+                <target>Task delete</target>
+            </trans-unit>
+            <trans-unit id="title.description">
+                <source>title.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="thead.task">
+                <source>thead.task</source>
+                <target>Task</target>
+            </trans-unit>
+            <trans-unit id="thead.priority">
+                <source>thead.priority</source>
+                <target>Priority</target>
+            </trans-unit>
+            <!-- Titles: Files -->
+            <trans-unit id="title.file_list">
+                <source>title.file_list</source>
+                <target>Files</target>
+            </trans-unit>
+            <trans-unit id="title.file_view">
+                <source>title.file_view</source>
+                <target>View file</target>
+            </trans-unit>
+            <trans-unit id="title.file_add">
+                <source>title.file_add</source>
+                <target>Add file</target>
+            </trans-unit>
+            <trans-unit id="title.file_delete">
+                <source>title.file_delete</source>
+                <target>Delete file</target>
+            </trans-unit>
+            <!-- Titles: Notes -->
+            <trans-unit id="title.note_list">
+                <source>title.note_list</source>
+                <target>Notes</target>
+            </trans-unit>
+            <trans-unit id="title.note_add">
+                <source>title.note_add</source>
+                <target>Add a new note</target>
+            </trans-unit>
+            <trans-unit id="title.note_edit">
+                <source>title.note_edit</source>
+                <target>Edit note</target>
+            </trans-unit>
+            <trans-unit id="title.note_view">
+                <source>title.note_view</source>
+                <target>View note</target>
+            </trans-unit>
+            <trans-unit id="title.note_delete">
+                <source>title.note_delete</source>
+                <target>Delete note</target>
+            </trans-unit>
+            <!-- Titles: Discussion -->
+            <trans-unit id="title.message_list">
+                <source>title.message_list</source>
+                <target>Discussion</target>
+            </trans-unit>
+            <trans-unit id="title.message_add">
+                <source>title.message_add</source>
+                <target>Add a new message</target>
+            </trans-unit>
+            <trans-unit id="title.message_edit">
+                <source>title.message_edit</source>
+                <target>Edit message</target>
+            </trans-unit>
+            <trans-unit id="title.message_delete">
+                <source>title.message_delete</source>
+                <target>Delete message</target>
+            </trans-unit>
+            <!-- Titles: Users -->
+            <trans-unit id="title.user_list">
+                <source>title.user_list</source>
+                <target>All users</target>
+            </trans-unit>
+            <trans-unit id="title.user_view">
+                <source>title.user_view</source>
+                <target>User</target>
+            </trans-unit>
+            <trans-unit id="title.user_edit">
+                <source>title.user_edit</source>
+                <target>Edit user</target>
+            </trans-unit>
+            <trans-unit id="title.user_delete">
+                <source>title.user_delete</source>
+                <target>Delete user</target>
+            </trans-unit>
+            <trans-unit id="title.user_add">
+                <source>title.user_add</source>
+                <target>Add user</target>
+            </trans-unit>
+
+            <!-- Messages -->
+            <trans-unit id="message.not_logged">
+                <source>message.not_logged</source>
+                <target>You must log in in order to use Sirk app. You can register if you do not have an account.</target>
+            </trans-unit>
+            <trans-unit id="message.login">
+                <source>message.login</source>
+                <target>If you already have an account, just log in and you're good to go!</target>
+            </trans-unit>
+            <trans-unit id="message.register">
+                <source>message.register</source>
+                <target>Don't have an account yet? You can register in just a few seconds and start working on your projects!</target>
+            </trans-unit>
+            <trans-unit id="message.hello">
+                <source>message.hello</source>
+                <target>Hi! You're logged in to Sirk app.</target>
+            </trans-unit>
+            <trans-unit id="message.delete_project">
+                <source>message.delete_project</source>
+                <target>Are you sure that you want to delete project</target>
+            </trans-unit>
+            <trans-unit id="message.no_tasks_overdue">
+                <source>message.no_tasks_overdue</source>
+                <target>No overdue tasks</target>
+            </trans-unit>
+            <trans-unit id="message.no_tasks_this_week">
+                <source>message.no_tasks_this_week</source>
+                <target>No tasks due this week</target>
+            </trans-unit>
+            <trans-unit id="message.delete_user">
+                <source>message.delete_user</source>
+                <target>Are you sure that you want to delete user:</target>
+            </trans-unit>
+            <trans-unit id="message.no_messages">
+                <source>message.no_messages</source>
+                <target>There are no messages.</target>
+            </trans-unit>
+            <trans-unit id="message.no_files">
+                <source>message.no_files</source>
+                <target>There are no files.</target>
+            </trans-unit>
+            <trans-unit id="message.element_successfully_added">
+                <source>message.element_successfully_added</source>
+                <target>Element has been successfully added!</target>
+            </trans-unit>
+            <trans-unit id="message.element_successfully_edited">
+                <source>message.element_successfully_edited</source>
+                <target>Element has been successfully edited!</target>
+            </trans-unit>
+            <trans-unit id="message.element_successfully_deleted">
+                <source>message.element_successfully_deleted</source>
+                <target>Element has been successfully deleted!</target>
+            </trans-unit>
+            <trans-unit id="message.record_not_found">
+                <source>message.record_not_found</source>
+                <target>Element with this ID doesn't exist.</target>
+            </trans-unit>
+            <trans-unit id="message.no_records_found">
+                <source>message.no_records_found</source>
+                <target>Nothing here, yet.</target>
+            </trans-unit>
+            <trans-unit id="message.user_successfully_added">
+                <source>message.user_successfully_added</source>
+                <target>New user registered successfully!</target>
+            </trans-unit>
+            <trans-unit id="message.form_error">
+                <source>message.form_error</source>
+                <target>There was an error in the form.</target>
+            </trans-unit>
+            <!-- Messages: Tasks -->
+            <trans-unit id="message.assigned">
+                <source>message.assigned</source>
+                <target>This task has been assigned.</target>
+            </trans-unit>
+            <trans-unit id="message.due_to">
+                <source>message.due_to</source>
+                <target>Due to</target>
+            </trans-unit>
+            <trans-unit id="message.no_due_time">
+                <source>message.no_due_time</source>
+                <target>No due time</target>
+            </trans-unit>
+            <trans-unit id="message.assigned_to">
+                <source>message.assigned_to</source>
+                <target>Assigned to</target>
+            </trans-unit>
+            <trans-unit id="message.no_assignment">
+                <source>message.no_assignment</source>
+                <target>Not assigned to anyone</target>
+            </trans-unit>
+            <trans-unit id="message.no_description">
+                <source>message.no_description</source>
+                <target>No description provided.</target>
+            </trans-unit>
+            <trans-unit id="message.finish_task">
+                <source>message.finish_task</source>
+                <target>Are you sure that you want to mark this task as finished?</target>
+            </trans-unit>
+            <trans-unit id="message.delete_task">
+                <source>message.delete_task</source>
+                <target>Are you sure that you want to delete this task?</target>
+            </trans-unit>
+            <trans-unit id="message.showing_finished_tasks">
+                <source>message.showing_finished_tasks</source>
+                <target>You are now viewing tasks that are marked as finished.</target>
+            </trans-unit>
+            <trans-unit id="message.not_tasks">
+                <source>message.not_tasks</source>
+                <target>There are no tasks added yet.</target>
+            </trans-unit>
+            <!-- Messages: Files -->
+            <trans-unit id="message.delete_file">
+                <source>message.delete_file</source>
+                <target>Are you sure that you want to delete this file?</target>
+            </trans-unit>
+            <trans-unit id="message.added_by">
+                <source>message.added_by</source>
+                <target>Added by</target>
+            </trans-unit>
+            <!-- Messages: Notes -->
+            <trans-unit id="message.delete_note">
+                <source>message.delete_note</source>
+                <target>Are you sure that you want to delete this note?</target>
+            </trans-unit>
+            <!-- Messages: Notes -->
+            <trans-unit id="message.delete_message">
+                <source>message.delete_message</source>
+                <target>Are you sure that you want to delete this message?</target>
+            </trans-unit>
+
+
+            <!-- Pagination -->
             <trans-unit id="label.nav.prev">
                 <source>label.nav.prev</source>
                 <target>Previous page</target>

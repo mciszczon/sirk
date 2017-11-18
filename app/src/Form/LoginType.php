@@ -1,6 +1,6 @@
 <?php
 /**
- * Login form.
+ * Login type.
  */
 
 namespace Form;

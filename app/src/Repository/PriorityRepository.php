@@ -1,15 +1,12 @@
 <?php
 /**
  * Priority Repository.
- *
- * @package Repository
  */
 namespace Repository;
 use Doctrine\DBAL\Connection;
+
 /**
  * Class PriorityRepository.
- *
- * @package Repository
  */
 class PriorityRepository
 {
@@ -19,6 +16,7 @@ class PriorityRepository
      * @var \Doctrine\DBAL\Connection $db
      */
     protected $db;
+
     /**
      * PriorityRepository constructor.
      *
@@ -28,6 +26,7 @@ class PriorityRepository
     {
         $this->db = $db;
     }
+
     /**
      * Fetch all records.
      *
@@ -38,51 +37,7 @@ class PriorityRepository
         $queryBuilder = $this->queryAll();
         return $queryBuilder->execute()->fetchAll();
     }
-    /**
-     * Find one record.
-     *
-     * @param string $id Element id
-     *
-     * @return array|mixed Result
-     */
-    public function findOneById($id)
-    {
-        $queryBuilder = $this->queryAll();
-        $queryBuilder->where('p.id = :id')
-            ->setParameter(':id', $id, \PDO::PARAM_INT);
-        $result = $queryBuilder->execute()->fetch();
-        return !$result ? [] : $result;
-    }
-    /**
-     * Save record.
-     *
-     * @param array $priority Type
-     *
-     * @return boolean Result
-     */
-    public function save($priority)
-    {
-        if (isset($priority['id']) && ctype_digit((string)$priority['id'])) {
-            // update record
-            $id = $priority['id'];
-            unset($priority['id']);
-            return $this->db->update('priority', $priority, ['id' => $id]);
-        } else {
-            // add new record
-            return $this->db->insert('priority', $priority);
-        }
-    }
-    /**
-     * Remove record.
-     *
-     * @param array $priority Type
-     *
-     * @return boolean Result
-     */
-    public function delete($priority)
-    {
-        return $this->db->delete('priority', ['id' => $priority['id']]);
-    }
+
     /**
      * Query all records.
      *

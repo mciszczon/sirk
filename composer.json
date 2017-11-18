@@ -1,12 +1,15 @@
 {
   "name": "mciszczon/sirk",
   "description": "Simple project management app built with Silex framework.",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "proprietary",
   "authors": [
     {
       "name": "mciszczon",
       "email": "contact@mciszczon.pl"
     }
-  ]
+  ],
+  "require-dev": {
+    "phpdocumentor/phpdocumentor":"~2.0"
+  }
 }

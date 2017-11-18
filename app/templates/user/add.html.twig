@@ -4,19 +4,50 @@
 
 {% block content %}
     <section class="site-main section">
+
+        <!-- Profile card -->
         <div class="pure-g pure-g-wide">
             <div class="pure-u-1">
-                <h2>{{ 'title.user_add'|trans }}</h2>
-                {{ form_start(form, { method: 'post', attr: { 'class': 'form form-stacked' }, action: url('user_add') }) }}
-                {{ form_widget(form) }}
-                <input type="submit" value="{{ 'action.save'|trans }}" class="pure-button pure-button-primary" />
-                {{ form_end(form) }}
+                <h2 class="header-icon">
+                    <span class="icon icon-add-user" aria-hidden="true"></span>
+                    {{ 'title.user_add'|trans }}
+                </h2>
 
-                <a class="pure-button" href="{{ url('user_index') }}">
-                    <span class="icon icon-back"></span>
-                    <span>{{ 'label.back'|trans }}</span>
-                </a>
+                <div class="pure-g panels">
+                    <div class="pure-u panel panel-collapsed panel-horizontal">
+                        <div class="panel-body" style="display: flex; align-items: center;">
+                            <div class="panel-cover-image">
+                                <img class="pure-img" src="{{ asset('img/profile.png') }}" alt="{{ 'title.user_add'|trans }}">
+                            </div>
+                            <div class="panel-content">
+                                {{ form_start(form, { method: 'post', attr: { 'id': 'user', 'class': 'form form-stacked' }, action: url('user_add') }) }}
+                                {{ form_widget(form) }}
+                                {{ form_end(form) }}
+
+                                <div class="panel-foot">
+                                    <ul class="controls">
+                                        <li>
+                                            <button form="user" title="{{ 'button.save'|trans }}" class="success">
+                                                <span class="icon icon-check" aria-hidden="true"></span>
+                                                <span>{{ 'button.save'|trans }}</span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('user_index') }}">
+                                                <span class="icon icon-cross" aria-hidden="true"></span>
+                                                <span>{{ 'button.cancel'|trans }}</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+
     </section>
+
 {% endblock %}
